@@ -1,0 +1,330 @@
+---
+number: 8
+title: Data flow diagrams
+summary: >-
+  A data flow diagram traces how information moves through a system — where it
+  comes from, what transforms it, where it rests, and who receives it — without
+  saying anything about the technology underneath. This lesson builds one from
+  the context level down, then splits it into a logical and a physical view.
+topics:
+  - Process modelling
+  - Logical vs physical models
+  - CRUD analysis
+  - Event partitioning
+source: "Lecture 8 — Using Data Flow Diagrams"
+readingTime: 18 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+A **data flow diagram**, or DFD, answers one question about a system: *where does
+the data go?* It follows a piece of information from the moment it enters the
+system, through every step that reads it, changes it, or stores it, until it
+leaves again as something a person or another system can use.
+
+That is a narrow question on purpose. A DFD deliberately says nothing about
+whether a step is done by a person or a program, which database stores a file, or
+what language anything is written in. By stripping all of that away, it lets an
+analyst and a business user look at the same picture and agree on *what the system
+does* before anyone argues about *how to build it*.
+
+## Why trace data flow at all
+
+Older ways of describing a system started from its structure: these are the
+files, these are the programs, here is the flowchart of the code. The problem is
+that this locks in technical decisions before anyone has understood the problem.
+If you have already drawn the programs, changing your mind is expensive, so you
+don't.
+
+Working from data flow instead gives you a few things:
+
+- **You commit to the technology last.** The diagram is true whether the system
+  is a stack of paper forms or a web application, so you can design the flow
+  first and choose the implementation afterwards.
+- **You can see how the parts connect.** Following the arrows shows which
+  processes depend on which data, and where a change in one place will be felt
+  somewhere else.
+- **You can find the system's edges.** Everything that sends data in or takes
+  data out, but is not itself part of the system, shows up clearly at the
+  boundary.
+- **You can talk to users with it.** The notation is small enough that a
+  non-technical reader can follow a diagram, and correct it, in a review meeting.
+
+## The four symbols
+
+The entire notation is four shapes. This is the whole vocabulary; there is
+nothing else to learn.
+
+<Figure
+  src="lec08/basic-symbols.png"
+  alt="A table showing the four DFD symbols: a double square for an external entity, an arrow for a data flow, a rounded rectangle for a process, and an open-ended rectangle for a data store, each with an example."
+  caption="The four symbols, with an example of each."
+  source="Lecture 8, slide 7"
+/>
+
+**External entity** — a double square. A person, department, company, or other
+system that sends data into the system or receives data from it, but sits
+*outside* the boundary you are modelling. A customer, a bank, a government agency,
+a warehouse. Name it with a noun. If you find yourself describing what an entity
+*does* with the data, you have probably drawn a process by mistake.
+
+**Data flow** — an arrow. A single packet of data in motion, moving in the
+direction of the arrowhead. Name it with a noun that describes the data itself:
+`New student information`, `Payment`, `Overdue notice`. An arrow is a photograph
+of data at one instant, not a description of a repeating activity, so a flow is
+never named with a verb.
+
+**Process** — a rounded rectangle. Work that transforms data: input comes in,
+something happens, different output goes out. Name it with a strong verb and a
+specific object — `Verify payment`, `Calculate gross pay`, `Produce transcript`.
+Each process carries a number, and that number is a label, not an order of
+execution. A process whose output is identical to its input is not doing
+anything and should be removed.
+
+**Data store** — an open-ended rectangle. Data at rest: a file, a table, a
+ledger, an index card box. Name it with a noun for the data it holds. A store is
+passive. It cannot do anything on its own, which means a data store never
+connects directly to another data store or to an external entity — a process
+always sits between them to do the reading or writing.
+
+<Note label="Rule of thumb">
+Entities and stores are nouns. Processes are verb-plus-noun. Flows are nouns.
+If a label breaks that pattern, the shape under it is probably wrong.
+</Note>
+
+## Three rules that catch most mistakes
+
+Before drawing anything, internalise three constraints. They rule out the
+diagrams that look plausible but cannot be true.
+
+1. **Every process has at least one input flow and at least one output flow.** A
+   process with input and no output is called a *black hole* — data goes in and
+   is never seen again. A process with output and no input is a *miracle* — it
+   produces data from nothing. Both mean something is missing from the diagram.
+2. **Every data flow touches at least one process.** A flow directly from an
+   entity to a store, or from a store to an entity, skips the work that would
+   actually move that data. Put the process in.
+3. **Nothing floats.** Every symbol connects to the rest of the diagram. A shape
+   with no arrows attached is a sign that you started to model something and
+   stopped.
+
+## Building the diagram, top down
+
+You do not draw a large system in one picture. You draw the whole thing at a very
+low level of detail, then repeatedly zoom in, and each zoom is a separate diagram.
+The layers are numbered by *level*.
+
+### The context diagram
+
+The **context diagram** is the top level. It contains exactly one process,
+numbered `0`, which stands for the entire system. Around it sit the external
+entities, and the only flows shown are the ones that cross the system boundary.
+There are no data stores at this level, because every store is *inside* the one
+process.
+
+<Figure
+  src="lec08/context-diagram.png"
+  alt="A context diagram: Entity 1 and Entity 2 send Input A and Input B into a single process numbered 0 labelled System Name, which sends Output C to Entity 3."
+  caption="One process, the entities around it, and only the flows that cross the boundary."
+  source="Lecture 8, slide 15"
+/>
+
+The value of this diagram is the argument it forces. To draw it you must decide
+exactly what is inside the system and what is outside, and which pieces of data
+genuinely cross that line. Everyone who signs off on the context diagram has
+agreed on the scope of the project.
+
+### Diagram 0
+
+**Diagram 0** is the result of zooming in on process `0`. It shows the major
+processes inside the system — as a working limit, between two and nine of them,
+because a diagram with more than nine processes is past the point where a reader
+can hold it in their head. Now the data stores appear, and the same external
+entities from the context diagram sit around the edge.
+
+<Figure
+  src="lec08/level-0-diagram.png"
+  alt="Diagram 0 showing four numbered processes, two data stores D1 and D2, external entities on the sides, and labelled record flows connecting processes to stores."
+  caption="Zooming into process 0: the major internal processes, the stores they use, and the flows between them."
+  source="Lecture 8, slide 18"
+/>
+
+A practical way to draw it is to work *backwards*. Start from an output the system
+must produce, ask what data that output is made from, then ask which process
+assembles it and where that process gets its inputs. Keep pulling the thread
+until you arrive back at data entering from an entity. Doing it in this direction
+keeps every process anchored to a real result instead of drifting into steps
+nobody asked for.
+
+### Child diagrams and balancing
+
+Any process on Diagram 0 can itself be exploded into a **child diagram** that
+shows its internal steps. A process numbered `3` on Diagram 0 explodes to a
+diagram whose processes are numbered `3.1`, `3.2`, `3.3`, and so on, so the
+numbering always tells you which parent a diagram belongs to.
+
+The rule that holds the layers together is **balancing**: a child diagram must
+have exactly the same flows crossing its edge as go in and out of its parent
+process. If process `3` receives two flows and sends one, its child diagram has
+those same three flows at its boundary — no more, no less. If they don't match,
+one of the two diagrams is wrong. Entities are usually dropped from child
+diagrams, since the boundary flows already say where the data comes from and
+goes.
+
+<Figure
+  src="lec08/parent-child.png"
+  alt="A parent diagram above and its child diagram below, separated by a diagonal band, with annotations noting that the boundary data flows must match between the two."
+  caption="Parent process above, its child below. The flows crossing the child's edge match the flows on the parent exactly."
+  source="Lecture 8, slide 22"
+  scroll
+/>
+
+Data stores follow a similar logic. A store used by only one process on Diagram 0
+does not need to appear there; it can wait until the child diagram, where it is
+actually touched. A store shared by two or more processes has to appear on the
+parent so the sharing is visible.
+
+## Logical and physical diagrams
+
+The same system is modelled twice, for two different audiences.
+
+A **logical DFD** describes *what the business does*. Its processes are business
+activities. Its stores are collections of data described by what they mean, not
+by how they are kept — `Prices`, not `UPC price file on disk`. It says nothing
+about people, machines, screens, or timing.
+
+<Figure
+  src="lec08/logical-dfd-example.png"
+  alt="A logical DFD for a sale: processes to identify the item, look up prices, compute the cost of the order, and settle the transaction, using a Prices store."
+  caption="The logical view of a sale — business steps and business data, no mechanism."
+  source="Lecture 8, slide 32"
+  scroll
+/>
+
+A **physical DFD** describes *how the system will actually run*. The same sale now
+shows which steps a person does and which are automated, real file and device
+names, the order things happen in, and the extra processes that only exist
+because of the implementation — validating input, re-sorting records, producing
+every printed or on-screen output, controlling for errors.
+
+<Figure
+  src="lec08/physical-dfd-example.png"
+  alt="A physical DFD for the same sale: a bar-code scan done manually, a UPC price file, a temporary transaction file, steps marked manual or automated, and a cash register receipt."
+  caption="The physical view of the same sale — devices, files, manual versus automated steps, and implementation-only processes."
+  source="Lecture 8, slide 33"
+  scroll
+/>
+
+The reason to draw the logical one first and derive the physical one from it:
+
+- The logical diagram is **stable**. Business activities change slowly;
+  technology changes fast. A model tied to the business survives a change of
+  platform.
+- It is **easier to review with users**, because it is in their language.
+- It **defers the technical commitment**, which is the whole point of working
+  from data flow.
+- It makes the eventual system **more complete**, because you designed the work
+  before you designed the machine.
+
+The physical diagram earns its place too: it is where you decide the split
+between human and automated work, where you can describe processes precisely
+enough to hand to a programmer, and where security and audit controls get drawn
+in.
+
+## CRUD: checking the model against the data
+
+Once you have processes and stores, a **CRUD matrix** checks that the two agree.
+CRUD stands for **create, read, update, delete** — the four things any process can
+do to stored data, and, over its whole life, the four things that must happen to
+every important kind of data the system keeps.
+
+Put the processes (or use cases) down the side and the data entities across the
+top. In each cell, write which of C, R, U, or D that process performs on that
+entity.
+
+<Figure
+  src="lec08/crud-matrix.png"
+  alt="A CRUD matrix with activities such as Customer logon, Item inquiry, Order checkout down the side, and Customer, Item, Order, Order Detail across the top, with C, R, U, D letters in the cells."
+  caption="Activities down the side, data entities across the top, C/R/U/D in the cells."
+  source="Lecture 8, slide 38"
+/>
+
+The matrix is useful because of its gaps:
+
+- An entity with a **read but no create** means the system uses data it never
+  captures. Either a process is missing, or that data belongs to another system.
+- An entity that is **created but never read** is dead weight — you are storing
+  something nobody uses.
+- An entity with **no delete anywhere** may be fine, or may be a data-retention
+  problem waiting to happen.
+- A column that is completely empty means you listed a data entity the system
+  does not actually touch.
+
+## Event partitioning
+
+For anything bigger than a small system, drawing Diagram 0 by staring at it
+doesn't scale. **Event partitioning** builds it up one piece at a time.
+
+List the **events** the system must respond to. An event is something that
+happens in the outside world that the system has to react to: a customer places
+an order, a day ends, a payment clears. For each event, record its trigger, the
+data it needs, the process that handles it, and the response it produces — this
+is an **event response table**.
+
+Each row of that table becomes one process on Diagram 0, wired to the stores and
+flows that row names. Draw a small DFD fragment per event, then merge the
+fragments. The full diagram is assembled rather than guessed.
+
+<Figure
+  src="lec08/event-response-dfd.png"
+  alt="Three small DFD fragments, one per event from an internet storefront event table: customer sign-in, browsing item records, and adding a customer order, each with its own process, entity, and stores."
+  caption="One DFD fragment per event. Assembled together, these become Diagram 0."
+  source="Lecture 8, slide 42"
+/>
+
+Events come in three kinds worth naming: **external** events, triggered by an
+entity sending data in; **temporal** events, triggered by the clock — an
+end-of-month run, a nightly export; and **state** events, triggered when data
+inside the system reaches some condition, such as stock falling below a reorder
+point.
+
+## Partitioning the physical diagram
+
+A physical DFD is also **partitioned** — split into groups of processes that will
+be built and run as units — for reasons that are all about implementation rather
+than business logic:
+
+- **Different user groups** operate different parts.
+- **Timing** differs: some processes run continuously, others once a night.
+- **Similar processing** is grouped so it can be built once.
+- **Efficiency**, keeping data that is used together in one place.
+- **Consistency**, so related updates happen as a unit.
+- **Security**, isolating the parts that touch sensitive data.
+
+## Common errors
+
+The mistakes that recur:
+
+- Leaving out a flow, or pointing an arrow the wrong way.
+- Connecting two data stores directly, or a store straight to an entity, with no
+  process between them.
+- A black hole (input, no output) or a miracle (output, no input).
+- More than nine processes on one diagram.
+- A child diagram that is **unbalanced** — its boundary flows don't match its
+  parent process.
+- Naming a process with a vague verb like `Process data` or `Handle request`,
+  which describes nothing.
+
+## Where this idea shows up now
+
+The notation is from structured analysis, but data-flow thinking did not go away.
+A modern architecture diagram — services as boxes, queues and topics as the
+stores, messages as the flows — is a DFD with different iconography. Data pipeline
+tools model a job explicitly as a graph of sources, transforms, and sinks, which
+is the same shape. And the discipline of separating a **logical** model from a
+**physical** one is exactly what a database schema (logical) versus its indexes,
+partitions, and storage engine (physical) still expresses today. When you sketch
+"where does the data come from and what touches it before the user sees it," you
+are drawing a DFD whether you call it that or not.

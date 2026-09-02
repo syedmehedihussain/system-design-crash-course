@@ -1,0 +1,19 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const base = import.meta.env.BASE_URL;
+const path = Astro.url.pathname.replace(/\/$/, '');
+const norm = (base + '').replace(/\/$/, '');
+const isLectures = path.startsWith(`${norm}/lectures`);
+const isAbout = path === `${norm}/about`;
+---
+<header class="site-header">
+  <div class="site-header__bar">
+    <a class="brand" href={`${base}/`}>System design</a>
+    <nav class="nav" aria-label="Primary">
+      <a href={`${base}/#lectures`} aria-current={isLectures ? 'page' : undefined}>Lectures</a>
+      <a href={`${base}/about`} aria-current={isAbout ? 'page' : undefined}>About</a>
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>

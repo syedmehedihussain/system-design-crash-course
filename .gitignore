@@ -1,0 +1,15 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# generated diagram working files
+resources/_render/
+
+# misc
+.DS_Store
+*.log
+.env
+.env.production

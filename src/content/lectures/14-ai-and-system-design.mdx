@@ -1,0 +1,199 @@
+---
+number: 14
+title: System design in the age of AI
+summary: >-
+  How a language model in the loop changes the work from the rest of this course
+  — what it makes nearly free, where the risk moves, the spec-driven method that
+  replaced ad-hoc prompting, the documents to prepare, the tools engineers
+  actually use in 2026, and the parts an analyst still cannot hand off.
+topics:
+  - AI across the lifecycle
+  - Spec-driven development
+  - Which documents to prepare
+  - Tools engineers use
+  - What not to delegate
+source: "Written for this archive — researched September 2026"
+readingTime: 19 min read
+draft: false
+---
+
+import Note from '../../components/Note.astro';
+
+The rest of this course was written for a slower era. This lesson maps its
+techniques onto a project where an AI assistant — a large language model, usually
+driving a coding agent — is part of the team. The spine does not change. The cost
+of each step, and the place where things go wrong, both do.
+
+## What changes, and what does not
+
+**What does not change.** Someone still has to decide what to build and why, talk
+to the people affected, choose the data model, own the trade-offs, and keep the
+chain from goal to code unbroken. That was the [analyst's
+job](../01-introduction#the-systems-analyst) in Lecture 1 and it still is.
+
+**What changes.** Drafting is nearly free. A requirements list, a first-cut
+[DFD](../08-data-flow-diagrams), a schema, a wireframe, a test suite, a working
+prototype — you can now produce a draft of any of them in minutes. The bottleneck
+moves from *producing* an artefact to *deciding* whether it is right and
+*verifying* that it is.
+
+**The 70% rule.** The engineer Addy Osmani's much-cited observation is that AI
+reliably gets a project about 70% of the way — the structure, the boilerplate,
+the happy path, the CRUD, the standard UI. The last 30% — edge cases, error
+handling, performance, security, accessibility — takes longer than the first 70%
+and needs the engineering judgement AI does not reliably have. For a prototype
+you will throw away, the 70% is the whole job. For something you will keep, it is
+the smaller half. Plan the schedule around that: use AI to reach a demoable state
+fast, then budget the real weeks for the 30%.
+
+## AI across the lifecycle
+
+Each deliverable from [Lecture 12](../12-semester-project) and
+[Lecture 13](../13-worked-project), what an assistant does with it, and what you
+still own.
+
+| Step | Where AI helps | What you still own and must verify |
+|---|---|---|
+| Frame the problem | Draft the goal statement and turn a vague ask into checkable objectives from meeting notes | Whether the objectives are the *right* ones; every objective still needs a real [problem](../03-project-management#where-projects-come-from) behind it |
+| Discover requirements | Transcribe and cluster interviews; turn a transcript into a first requirements list; find gaps and contradictions across documents | Talking to people; judging feasibility and priority; catching a requirement the model invented that nobody asked for |
+| Model processes | Generate a context and level-0 DFD from the requirements prose; check balancing | Whether the decomposition matches how the work is really done; the store and flow names |
+| Model objects | Draft the class, use-case, and sequence diagrams from a description; keep the diagram and the prose in sync | The data model is a long-lived decision — review every class and relationship by hand |
+| Design input and output | Generate wireframes and a form spec from a use case; suggest a control per field; draft report layouts | Accessibility, validation rules, [honest presentation](../10-output-design#output-bias), testing on real devices |
+| Build | Scaffold the schema, API, and UI; implement tasks from a spec; write migrations, glue code, tests | Architecture, security, and the 30%: edge cases, performance, error paths — and reviewing every diff |
+| Test | Generate test cases from acceptance criteria; property tests; fixtures | That the tests assert the right behaviour, not merely that the code runs |
+| Ship and maintain | Draft release notes, runbooks, and decision records; summarise incidents; triage | The decisions those records capture; on-call judgement |
+
+## Spec-driven development
+
+Writing a prompt and hoping is unreliable past a small change. The practice that
+replaced it in 2026 is **spec-driven development (SDD)**: write the spec first —
+requirements, then user stories, then acceptance criteria — then a technical
+design, then a task breakdown, and let the agent implement the tasks against the
+spec. It is [Lectures 4](../04-interactive-methods) through
+[9](../09-process-specifications) done as living Markdown that the agent reads on
+every run.
+
+The tooling that popularised it:
+
+- **GitHub Spec Kit** — an open-source command-line tool that drops Markdown
+  templates into your repository and lets your existing agent drive a
+  *constitution → specify → plan → tasks → implement* loop. The spec is portable
+  prose you commit alongside the code. It passed roughly 130,000 GitHub stars in
+  its first year and reached version 1.0 in 2026.
+- **AWS Kiro** — an editor that turns one prompt into three structured files:
+  `requirements.md` in EARS notation, `design.md`, and `tasks.md`, then
+  implements them.
+- **BMAD-METHOD** — a third, agent-role-based variant.
+
+Two ideas from that world are worth taking whatever tool you use:
+
+**The constitution, usually a file named `AGENTS.md` at the repository root.** A
+short document of durable project decisions — language, framework, testing
+policy, accessibility bar, security rules, dependency policy — that every spec,
+plan, and agent action must respect. It is the coding-standards document from the
+SDLC, written for a reader that forgets everything between sessions.
+
+**EARS — the "Easy Approach to Requirements Syntax".** A constrained way to write
+a requirement, such as *"WHEN a delivery is confirmed, THE SYSTEM SHALL record an
+outbound movement stamped with the receiving agency."* It reads cleanly for both
+people and agents and maps straight onto Lecture 4's "verifiable" criterion.
+
+## Building MVPs with AI
+
+The trap is that a prototype which demos in an afternoon feels 90% finished and
+is 70% finished. Keep two kinds of MVP apart:
+
+- **An MVP you will throw away** — built to learn whether an idea is worth
+  pursuing. Let the assistant do all of it. Do not polish. Its value is the
+  feedback, which is exactly what [Lecture 6's
+  prototyping](../06-agile-and-prototyping) is for, now available in hours instead
+  of weeks.
+- **An MVP you will keep building on** — the first increment of the real product.
+  Apply the whole spine: spec first, data model reviewed by hand, every line read
+  before it merges.
+
+What gets faster is the loop from idea to clickable thing to user reaction — use
+it to kill bad ideas cheaply. What does not get faster is deciding the data
+model, getting security right, and the 30%. Those are now the expensive part, so
+front-load them: one-page brief → spec → schema and API scaffold → UI from
+wireframes → pilot → then the real weeks on the 30% before you call it a product.
+
+## The documents to prepare
+
+Every deliverable from Lectures 4 through 13 still exists. Most have moved out of
+Word and the wiki and into version-controlled Markdown next to the code, because
+the new reader is an agent that needs them in the repository. When a client or an
+auditor still needs a Word or PDF document, generate it from the Markdown rather
+than maintaining two copies.
+
+| Document | What it is for | Form teams use in 2026 |
+|---|---|---|
+| One-page product brief | The goal, the users, the top objectives, what is out of scope — [Lecture 13](../13-worked-project#1-frame-the-problem), step 1, on one page | Markdown in the repo, or a Notion / Linear doc |
+| PRD or product spec | The functional requirements and acceptance criteria — the *what*, not the *how* | Markdown the agent can read; the public AI-PRD templates are common starting points |
+| Requirements spec (SRS) | Formal functional and nonfunctional requirements, when a client or auditor expects one | ISO/IEC/IEEE 29148 structure, requirements in EARS, delivered as a generated PDF |
+| Technical design doc | Architecture, data model, key interfaces — [Lecture 8](../08-data-flow-diagrams) and [Lecture 6](../06-agile-and-prototyping) output | Markdown plus text diagrams in the repo; `design.md` in SDD tools |
+| Task breakdown | The design cut into agent-sized or person-sized pieces | `tasks.md`, or issues in GitHub / Linear |
+| Constitution (`AGENTS.md`) | The durable project rules the agent must follow every session | Markdown at the repo root |
+| Architecture decision records | One numbered file per significant decision: context, decision, consequences — the *why* that outlives staff turnover and the agent's forgetfulness between sessions | Markdown under `docs/adr/` |
+| Eval set | Input and expected-output pairs a release must still pass, for any feature that contains a model | A dataset in an eval tool, run in CI |
+| Runbook and README | How to run, deploy, back up, and restore — Lecture 13's "survive the maintainer leaving" | Markdown in the repo |
+
+## The tools engineers actually use
+
+A snapshot from mid-2026 developer surveys and tool round-ups. Names change every
+few months; the categories are stable.
+
+- **Coding agents.** Claude Code is the most-used in 2026 surveys, especially at
+  smaller teams; GitHub Copilot is the enterprise default; Cursor is widely used;
+  OpenAI's Codex grew fast from a standing start. Windsurf, Cline, and Aider round
+  it out. Most engineers report using two to four of these at once. The arc
+  through 2026 has been autocomplete → AI-native IDEs → long-running agents that
+  plan, edit, run the tests, and hand back a branch for review.
+- **Spec-driven development.** GitHub Spec Kit, AWS Kiro, BMAD-METHOD.
+- **Diagramming.** Mermaid and PlantUML — text-based, so they diff in a pull
+  request and an agent can write them — which is why they displaced drawing tools
+  for docs-as-code. Eraser's DiagramGPT generates UML, DFD, and ER diagrams from
+  prose and exposes an MCP server. Excalidraw is the whiteboarding default.
+- **UI generation.** v0 and Figma Make turn a brief or a wireframe into a working
+  front end.
+- **Requirements and project tracking.** Linear and Notion, both with AI drafting;
+  the issue list doubles as the task list an agent picks up.
+- **Model Context Protocol (MCP).** The open standard — from Anthropic, since
+  adopted by OpenAI, Google, and Microsoft — that lets an agent read your issue
+  tracker, database schema, or design tool directly instead of by copy-paste. SDK
+  downloads passed roughly 97 million a month in early 2026, with thousands of
+  servers published. This is the plumbing that gets the analyst's artefacts in
+  front of the agent.
+- **Evals and observability.** LangSmith, Braintrust, and Arize. For any feature
+  that contains a model, an eval set gates the release the way a test suite gates
+  ordinary code.
+
+## What an analyst must not hand off
+
+- **Inventing requirements.** Ask a model to "list the requirements" and it will
+  produce plausible ones nobody asked for. Every requirement still has to trace
+  to a stated [problem](../03-project-management#where-projects-come-from) and a
+  real person.
+- **The data model.** Cheap to generate, expensive to change once there is data
+  in it. Review every entity and relationship by hand, as in
+  [Lecture 13](../13-worked-project#6-model-the-objects), step 6.
+- **Security, privacy, and compliance.** The 30% AI is worst at, and the part
+  with legal weight. Threat-model by hand; do not ship generated authentication
+  unreviewed.
+- **The verification burden.** Generated code and generated prose both need
+  review, and review does not scale as fast as generation. Budget for it. Small,
+  spec-scoped tasks keep review possible; "build the whole thing" does not.
+- **Licensing and provenance.** Generated code can echo licensed source. Keep a
+  person in the loop for anything you ship.
+- **The traceability thread.** The assistant will happily build something no
+  objective asked for. Keeping goal → objective → requirement → model → code
+  unbroken is still a person's job, and it is the whole point of the course.
+
+## Where this idea shows up now
+
+This archive is itself the argument. The techniques were designed for a slower
+era, but each one — the goal statement, the requirement that is verifiable, the
+balanced DFD, the reviewed class diagram, the honest report, the traceability
+thread — is what lets you work with a fast, confident, sometimes wrong assistant
+without losing hold of what you are building. The tools will keep changing. The
+reason the method works will not.

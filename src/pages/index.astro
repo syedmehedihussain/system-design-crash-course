@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import Page from '../layouts/Page.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const lectures = (await getCollection('lectures'))
+  .filter((e) => import.meta.env.DEV || !e.data.draft)
+  .sort((a, b) => a.data.number - b.data.number);
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<Page
+  title="System design archive"
+  description="A worked archive of a full system analysis and design course — from the analyst's role to input screen design — rebuilt as readable, standalone lessons."
+>
+  <section class="hero">
+    <h1>System design, from the ground up</h1>
+    <p>
+      This is a rebuilt archive of a full university course in system analysis and
+      design. It starts with what a system is and what an analyst actually does,
+      then works through project management, gathering requirements, modelling with
+      UML and data flow diagrams, writing process logic, and designing the output
+      and input that people finally touch.
+    </p>
+    <p>
+      Every lesson is written from scratch to be read on its own. The diagrams are
+      the original lecture slides, kept as images and cited by slide number; the
+      explanation around them is new.
+    </p>
+  </section>
+
+  <section id="lectures">
+    <p class="section-label">The course</p>
+    <div class="card-list">
+      {lectures.map((l) => (
+        <a class="lecture-card" href={`${base}/lectures/${l.id}`}>
+          <span class="num">{pad(l.data.number)}</span>
+          <span class="body">
+            <h3>{l.data.title}</h3>
+            <p>{l.data.summary}</p>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Page>

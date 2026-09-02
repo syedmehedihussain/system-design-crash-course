@@ -1,0 +1,188 @@
+---
+number: 6
+title: Agile modelling and prototyping
+summary: >-
+  Building something small and real to learn from it before committing — the four
+  kinds of prototype and how to run one, then the agile values, activities, and
+  practices that grew out of the same instinct.
+topics:
+  - Prototype types
+  - Running a prototype
+  - Agile values and practices
+  - User stories and Scrum
+source: "Lecture 6 — Agile Modeling and Prototyping"
+readingTime: 17 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+The safest way to find out whether a design is right is to build a piece of it and
+put it in front of the people who will use it. That instinct — learn by making
+something real, early, and cheaply — is what prototyping is, and it is also the
+root of agile methods. This lesson covers both, in that order.
+
+## Prototyping
+
+A **prototype** is a partial or provisional version of a system, built to answer a
+question before the full system is committed. There are four kinds, distinguished
+by what they leave out.
+
+<Figure
+  src="lec06/four-prototypes.png"
+  alt="Four labelled block illustrations: a patched-up prototype (uneven stacked layers), a nonoperational prototype (a solid block labelled input, process, output), a first-of-a-series prototype (one large block with facility 1, 2, 3 layers), and a selected-features prototype (a block with feature 1, 3, 5 layers and gaps)."
+  caption="The four kinds of prototype."
+  source="Lecture 6, slide 10"
+/>
+
+**Patched-up** — a working model that has all the intended features but is
+inefficient or roughly assembled. It does the whole job, just not well; you use
+it to confirm the design works end to end before rebuilding it properly.
+
+**Nonoperational** — a non-working scale model built to test one aspect of the
+design, such as the screen flow or the layout, without any of the processing
+behind it. A clickable mock-up with no real logic.
+
+**First-of-a-series** — a fully operational pilot, installed at one site. Useful
+when the system will eventually be rolled out to many locations and you want to
+prove it in one before committing to all.
+
+**Selected-features** — an operational model that includes some of the eventual
+features but not all, built in modules so the rest can be added later. The
+features that are present actually work.
+
+### Prototyping and the life cycle
+
+Prototyping addresses the two standing complaints about the traditional systems
+development life cycle: it takes too long, and requirements are hard to pin down
+on paper. But replacing the life cycle with prototyping outright has its own
+risks — shaping the system before the problem is fully understood, and users or
+managers mistaking a rough prototype for a finished product. In practice
+prototyping is used *within* a disciplined process, not instead of one.
+
+### Running a prototype well
+
+Four guidelines:
+
+- **Work in manageable modules.** Build the prototype as parts that can be
+  understood and changed independently.
+- **Build it rapidly.** Speed is the point. A prototype that takes months has
+  lost its reason to exist.
+- **Modify it in successive iterations.** Each round of feedback produces a
+  changed prototype; the modularity is what makes that cheap.
+- **Stress the user interface.** The prototype's job is to get users to articulate
+  requirements they could not state in the abstract, and they do that by reacting
+  to a screen.
+
+A quick route to a prototype is assembling **commercial off-the-shelf** software
+modules rather than writing anything.
+
+### What it costs and what it buys
+
+The disadvantages: a prototype is hard to manage as a sub-project inside a larger
+effort, and users or sponsors can become attached to a version that was never
+meant to ship. The advantages: the system can be changed early while change is
+cheap, development can be stopped if it is clearly not working, and the design
+that results fits how people actually work because they helped shape it.
+
+Users have to be honestly involved — actually experimenting with the prototype
+and giving open, unfiltered reactions — and their feedback is captured on a
+structured **evaluation form** so it can be compared across rounds.
+
+## Agile modelling
+
+**Agile methods** are a family of user-centred approaches that took the
+prototyping instinct and built a whole development style around it.
+
+### Values
+
+<Figure
+  src="lec06/agile-values.png"
+  alt="A four-part disc diagram with 'Agile Values' at the centre and four segments labelled communication, simplicity, feedback, and courage."
+  caption="The four values agile modelling is built on."
+  source="Lecture 6, slide 25"
+/>
+
+**Communication** — keep it constant and face to face. **Simplicity** — do the
+simplest thing that works and no more. **Feedback** — get it fast, from working
+software and from tests, and act on it. **Courage** — be willing to change or
+throw away code when the feedback says to.
+
+The principles that follow from those values: satisfy the customer by delivering
+working software, embrace changing requirements, prefer face-to-face
+conversation, deliver frequently, keep the design simple, provide rapid feedback,
+build in quality, and review and adjust the process itself as you go.
+
+### Activities
+
+Agile modelling names four basic activities:
+
+- **Coding** — the one activity you cannot skip; it is what produces the thing of
+  value.
+- **Testing** — automated, written to check functionality, performance, and
+  conformance, and run constantly.
+- **Listening** — done "in the extreme": active listening to your programming
+  partner and to the customer, on the assumption you do not already know what
+  they need.
+- **Designing** — creating structure to organise the system's logic, done
+  continuously and evolutionarily rather than all up front.
+
+### Resource control variables
+
+Four things can be traded against each other on a project: **time**, **cost**,
+**quality**, and **scope**. You cannot fix all four; agile makes the trade
+explicit by fixing time and cost, protecting quality, and letting scope flex.
+
+### Core practices
+
+<Figure
+  src="lec06/user-story-card.png"
+  alt="A user story card: fields for need or opportunity ('apply shortcut methods for faster checkout'), story (if the identity of the customer is known and the delivery address matches, speed up the transaction), a list of activities (coding, testing, listening, designing) and resources (time, cost, quality, scope), each with a rating grid from well below to well above average."
+  caption="A user story recorded on a card, with room to rate the activities and resources it will need."
+  source="Lecture 6, slide 39"
+/>
+
+The practices that keep agile honest: **short releases**, so the system evolves in
+small visible steps; a sustainable **40-hour work week**, because tired developers
+produce worse work; an **onsite customer**, available to answer questions
+immediately; and **pair programming**, two people at one screen, which raises
+quality and spreads knowledge.
+
+The development loop itself: listen for **user stories** (spoken descriptions of
+something a user values, recorded briefly on cards), sketch a logical workflow,
+write more stories, build in short iterations, and get the working result back in
+front of users.
+
+### Scrum
+
+**Scrum** is one agile framework. It starts with a high-level plan that is
+expected to change, and organises work into fixed-length iterations.
+
+<Figure
+  src="lec06/scrum-cycle.png"
+  alt="The Scrum cycle: a product backlog prioritised by the product owner feeds a sprint backlog of tasks expanded by the team; an inner loop marked '24 hours' is the daily scrum meeting, an outer loop marked '30 days' is the sprint, and the sprint produces a potentially shippable product increment."
+  caption="The Scrum cycle: a sprint turns a slice of the backlog into a shippable increment; the daily scrum is the inner loop."
+  source="Lecture 6, slide 42"
+/>
+
+Its pieces: the **product backlog** (everything wanted, ordered by the product
+owner), the **sprint backlog** (what this iteration will attempt), the **sprint**
+(the fixed-length iteration itself), the **daily scrum** (a short daily
+check-in), and the **demo** (showing the increment at the sprint's end).
+
+<Note label="Lessons">
+Short releases let the system evolve; pair programming lifts overall quality; the
+sustainable week improves effectiveness; balanced resources and honest estimates
+keep the plan real. The recurring theme is small steps with fast feedback.
+</Note>
+
+## Where this idea shows up now
+
+Almost all of this is now just how software is built. Prototyping survives as
+design mock-ups, spikes, and feature flags; "selected-features prototype" is a
+minimum viable product; "first-of-a-series" is a staged rollout. The agile
+values and Scrum are mainstream rather than novel. The one thing worth carrying
+forward deliberately is the framing of time, cost, quality, and scope as four
+variables you must consciously trade — every missed deadline is a decision not to
+flex one of the other three.

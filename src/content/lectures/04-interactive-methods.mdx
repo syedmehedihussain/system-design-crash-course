@@ -1,0 +1,231 @@
+---
+number: 4
+title: "Requirements: interactive methods"
+summary: >-
+  Finding out what a system must do by dealing directly with the people who will
+  use it — interviews and how their questions are shaped and ordered, the stories
+  users tell, joint design workshops, and questionnaires.
+topics:
+  - Functional vs nonfunctional requirements
+  - Interviewing
+  - Joint Application Design
+  - Questionnaires
+source: "Lecture 4 — Information Gathering: Interactive Methods"
+readingTime: 20 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+A system is only as good as the understanding it was built on, and that
+understanding starts with **requirements discovery** — the work of finding out
+what the system must do and how well it must do it. This lesson covers the
+methods that involve talking to people directly: interviews, listening for
+workplace stories, running a joint design workshop, and sending out
+questionnaires. (The methods that do not interrupt anyone — sampling, reading
+records, observation — are the [next lesson](../05-unobtrusive-methods).)
+
+## What a requirement is
+
+A **system requirement** (or business requirement) is a statement of something
+the system must do or a quality it must have. They split into two kinds.
+
+**Functional requirements** describe a function the system must perform: "the
+system shall produce a monthly aging report", "a clerk can void a transaction
+before it is posted". If you can point to a feature that does it, it is
+functional.
+
+**Nonfunctional requirements** describe how well, or under what constraints, the
+system must operate: performance, capacity, availability, security, usability,
+maintainability, legal and policy limits. They are easy to leave out because no
+single screen "does" them, and expensive to add later.
+
+### Getting them right matters
+
+A wrong or vague requirement propagates. The classic example: "create a means to
+transport a single individual from home to work" — that could be a car, a
+bicycle, or a helicopter, and each costs wildly different amounts. Incorrect
+requirements mean the system costs more than projected, arrives late, does not do
+what users need, and gets patched repeatedly after delivery.
+
+Good requirements are **consistent** (they do not contradict each other),
+**complete**, **feasible**, genuinely **required** (not gold-plating),
+**accurate**, **traceable** back to a business need, and **verifiable** — you can
+test whether each one was met. The whole set is written up in a **requirements
+definition document**, reviewed with stakeholders (**validation**), and then kept
+under **requirements management** so that changes are controlled rather than
+absorbed silently.
+
+## Interviewing
+
+An interview collects information about requirements, and also about opinions,
+feelings, and goals that never show up in a document. It has to be prepared:
+read the background material first, set clear objectives for the conversation,
+decide who to interview and in what order, and plan the questions.
+
+### Two kinds of question
+
+**Open-ended questions** put no limit on the answer — "walk me through how you
+handle a return". They relax the interviewee, surface vocabulary and priorities
+you did not know to ask about, and keep the conversation alive. The cost is time,
+irrelevant detail, and the risk of losing control of the interview.
+
+**Closed questions** limit the responses — "how many returns per day?", "do you
+approve refunds yourself, yes or no?". They are fast, easy to compare across
+interviewees, and keep the interview on track, but they are dull to answer and
+miss the detail nobody thought to ask for.
+
+<Figure
+  src="lec04/open-vs-closed-attributes.png"
+  alt="A comparison scale for open-ended versus closed questions across six attributes: reliability of data (low to high), efficient use of time (low to high), precision of data (low to high), breadth and depth (much to little), interviewer skill required (much to little), and ease of analysis (difficult to easy)."
+  caption="How open and closed questions trade off across six attributes."
+  source="Lecture 4, slide 30"
+/>
+
+Two more types are worth naming. **Bipolar questions** are a closed question with
+exactly two answers — yes/no, agree/disagree — and should be used sparingly.
+**Probes** are follow-ups — "why?", "can you give an example?" — that pull more
+detail out of a previous answer; they are how you turn a thin response into a
+useful one.
+
+### Ordering the questions
+
+The sequence of questions has structure, and there are three standard shapes.
+
+A **pyramid** starts narrow and opens out: specific closed questions first,
+broadening to open-ended ones. Use it when the interviewee needs warming up, or
+when you want them thinking about a topic before being asked to reflect on it
+broadly.
+
+<Figure
+  src="lec04/pyramid-structure.png"
+  alt="A pyramid diagram for interview question order, narrow at the top and wide at the base, with example questions moving from 'what specifically is the problem with your firewall?' at the top to 'in general, how do you feel about security versus the importance of internet access?' at the base."
+  caption="Pyramid: start with specific questions, widen to general ones."
+  source="Lecture 4, slide 35"
+/>
+
+A **funnel** does the opposite: broad open-ended questions first, narrowing to
+specific closed ones. Use it when the interviewee already has strong opinions and
+wants to vent them before being pinned down.
+
+<Figure
+  src="lec04/funnel-structure.png"
+  alt="An inverted-funnel diagram for interview question order, wide at the top and narrow at the bottom, with example questions moving from 'what are your reactions to the new web-based procurement system?' at the top to 'is there any essential item that has been excluded from the site?' at the bottom."
+  caption="Funnel: start with broad questions, narrow to specific ones."
+  source="Lecture 4, slide 37"
+/>
+
+A **diamond** combines both: specific, then broad, then specific again. It starts
+concrete to build confidence, opens into the big issues, then closes on
+particulars — the most engaging structure for a long interview, at the cost of
+taking the longest.
+
+<Figure
+  src="lec04/diamond-structure.png"
+  alt="A diamond-shaped diagram for interview question order, narrow at top and bottom and wide in the middle, with specific questions at the start, general questions such as 'what is the value of the usage information to you as a webmaster?' in the middle, and specific questions again at the end."
+  caption="Diamond: specific, then general, then specific — the pyramid and funnel joined."
+  source="Lecture 4, slide 39"
+/>
+
+### Closing and recording
+
+End every interview by asking "is there anything else you would like to add?",
+then summarise what you heard and confirm it. Write the **interview report** as
+soon as possible afterwards — a short summary first, then detail — and send it
+back to the interviewee to check.
+
+## Stories
+
+People in a workplace tell **stories**, and those stories carry requirements that
+no direct question elicits. They come in four kinds: **experiential** (what the
+teller did), **explanatory** (why something is the way it is), **validating** (a
+story told to justify a decision), and **prescriptive** (a story told to tell you
+how things should be done). Collecting them is a low-effort way to learn what a
+process actually feels like from inside.
+
+## Joint Application Design
+
+**Joint Application Design** (JAD) replaces a series of one-on-one interviews with
+a single structured workshop. It fits when users are impatient for change, the
+culture supports group work, and the analysts expect the traditional
+interview-by-interview approach to drag.
+
+The room needs specific roles: an **executive sponsor** with authority, an **IS
+analyst**, the **users**, a neutral **session leader**, **observers**, and a
+**scribe** to capture decisions. Meetings are usually held offsite, in
+comfortable surroundings, scheduled when users can actually be away from their
+desks.
+
+JAD done well saves time, speeds development, and produces stronger user
+ownership of the result. It fails when the block of time cannot be freed for
+everyone, when preparation is thin, or when the session is not skilfully
+facilitated.
+
+## Questionnaires
+
+A **questionnaire** trades the depth of an interview for reach. It is the right
+tool when the people you need to hear from are geographically spread out, when
+many people are involved and you want a statistically meaningful picture, when
+you are exploring before deciding what to pursue in interviews, or when you want
+to surface problems that people will admit on paper but not in person.
+
+### Question types and language
+
+Questionnaire questions are **open-ended** or **closed**, with the same trade-off
+as in interviews — but on a questionnaire you cannot probe, so you must
+anticipate the range of answers a question will produce before you send it.
+
+<Figure
+  src="lec04/questionnaire-tradeoffs.png"
+  alt="A comparison scale for open-ended versus closed questions on questionnaires across five attributes: speed of completion (slow to fast), exploratory nature (high to low), breadth and depth (high to low), ease of preparation (easy to difficult), and ease of analysis (difficult to easy)."
+  caption="Open versus closed questions on a questionnaire, where there is no chance to follow up."
+  source="Lecture 4, slide 53"
+/>
+
+The wording must be **simple, specific, short, not patronising, free of bias**,
+and aimed at people who actually know the answer.
+
+### Measurement scales
+
+Closed questions often use a **scale**. Two forms matter here. **Nominal** scales
+just classify — "which department are you in?" — and are the weakest measurement:
+you can count categories and nothing more. **Interval** scales assume equal gaps
+between points — a 1-to-5 agreement scale — with no true zero, which lets you
+compare and average responses.
+
+A scale should be **reliable** (the same respondent gives the same answer on a
+second sitting) and **valid** (it measures what you meant it to). Three biases
+recur: **leniency**, where easy raters push everything high — countered by moving
+the neutral point off centre; **central tendency**, where everyone rates
+everything average — countered by widening the differences between points; and
+the **halo effect**, where an impression from one question bleeds into the next —
+countered by putting one trait per page or spacing related questions apart.
+
+### Layout and delivery
+
+Give the form ample white space and room to write, make it easy to read, put the
+most important questions first, cluster related questions, and introduce
+sensitive items only after easier ones. Web surveys add a control question:
+which input control captures each answer.
+
+<Figure
+  src="lec04/web-survey-controls.png"
+  alt="A table of web survey controls: one-line text box (small amount of text), scrolling text box (one or more paragraphs), check box (yes/no, e.g. join the mailing list), radio button (yes/no or true/false), drop-down menu (choose one from a predetermined list), and push button (an action such as Submit or Clear)."
+  caption="Which web control to use for each kind of answer."
+  source="Lecture 4, slide 66"
+/>
+
+Questionnaires can be gathered by convening respondents together, handing them
+out in person, mailing them, or submitting them electronically — the last being
+cheapest and easiest to tally, since results arrive already stored.
+
+## Where this idea shows up now
+
+The formats have moved online — user interviews over video, JAD as a design
+sprint or workshop, questionnaires as web forms and in-product surveys — but the
+craft is unchanged. You still choose open versus closed deliberately, still order
+questions to warm a person up or let them vent first, still write survey items
+that are short and unbiased, and still design around leniency, central tendency,
+and the halo effect. Anticipating the range of answers before you ship a survey
+is exactly the work of writing good analytics events or a well-scoped user study.

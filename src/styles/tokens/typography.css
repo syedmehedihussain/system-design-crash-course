@@ -1,0 +1,46 @@
+/* Typography. Scale + weights are Tailwind v4 defaults, pinned exactly (design.md §2.3).
+   Families are the cream/Claude-adjacent substitution described in tokens/fonts.css. */
+:root {
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
+
+  /* Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-prose-h1: 2rem;
+
+  /* Line heights */
+  --leading-body: 1.6;
+  --leading-xs: 1.3333;
+  --leading-sm: 1.4286;
+  --leading-lg: 1.5556;
+  --leading-xl: 1.4;
+  --leading-2xl: 1.3333;
+  --leading-tight: 1.2;
+
+  /* Weights — only these four are used anywhere */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Measures */
+  --measure-prose: 65ch;
+
+  /* Semantic type roles */
+  --type-hero: var(--weight-bold) var(--text-3xl) / var(--leading-tight) var(--font-sans);
+  --type-page-title: var(--weight-semibold) var(--text-2xl) / var(--leading-2xl) var(--font-sans);
+  --type-section: var(--weight-semibold) var(--text-xl) / var(--leading-xl) var(--font-sans);
+  --type-subsection: var(--weight-medium) var(--text-lg) / var(--leading-lg) var(--font-sans);
+  --type-body: var(--weight-regular) var(--text-base) / var(--leading-body) var(--font-sans);
+  --type-small: var(--weight-regular) var(--text-sm) / var(--leading-sm) var(--font-sans);
+  --type-meta: var(--weight-regular) var(--text-xs) / var(--leading-xs) var(--font-sans);
+  --type-code: var(--weight-regular) var(--text-sm) / var(--leading-body) var(--font-mono);
+}

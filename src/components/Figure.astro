@@ -1,0 +1,22 @@
+---
+// A captioned slide screenshot. No diagram is ever drawn by hand for this
+// archive — every figure is a crop of the original lecture deck, cited by slide.
+interface Props {
+  src: string;        // path under /public/diagrams, e.g. "lec08/context-diagram.png"
+  alt: string;
+  caption?: string;
+  source: string;     // e.g. "Lecture 8, slide 14"
+  scroll?: boolean;   // dense diagram: show at native size, scroll sideways if needed
+}
+const { src, alt, caption, source, scroll } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const href = `${base}/diagrams/${src}`.replace(/([^:]\/)\/+/g, '$1');
+const cls = ['figure', scroll && 'figure--scroll'].filter(Boolean).join(' ');
+---
+<figure class={cls}>
+  <img src={href} alt={alt} loading="lazy" decoding="async" />
+  <figcaption>
+    {caption && <span class="text">{caption}</span>}
+    <span class="src">{source}</span>
+  </figcaption>
+</figure>

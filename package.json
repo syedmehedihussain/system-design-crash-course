@@ -1,0 +1,25 @@
+{
+  "name": "system-design-archive",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syedmehedihussain/system-design.git"
+  },
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/syedmehedihussain/system-design/issues"
+  },
+  "homepage": "https://github.com/syedmehedihussain/system-design#readme",
+  "private": "true",
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.14",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^5.18.2",
+    "sharp": "^0.35.4"
+  }
+}

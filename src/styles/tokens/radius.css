@@ -1,0 +1,13 @@
+/* Radius + elevation. There are NO box-shadows in this system — separation is
+   1px borders or flat background blocks only (design.md §4). */
+:root {
+  --radius-sm: 0.25rem; /* 4px — pills, chips, small icons */
+  --radius-md: 0.375rem; /* 6px — icon buttons, inputs */
+  --radius-lg: 0.5rem; /* 8px — cards, images, hover blocks */
+
+  --border-width: 1px;
+  --border-width-timeline: 2px; /* timeline rail */
+  --border-width-quote: 3px; /* blockquote rail */
+
+  --shadow-none: none; /* the only shadow token, on purpose */
+}

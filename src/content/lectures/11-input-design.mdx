@@ -1,0 +1,166 @@
+---
+number: 11
+title: Designing effective input
+summary: >-
+  Getting data into a system accurately the first time — paper form layout, the
+  seven sections of a form, on-screen and web form design, and choosing the right
+  GUI control for each kind of field.
+topics:
+  - Form design
+  - Form flow and captioning
+  - Display and web forms
+  - GUI controls
+source: "Lecture 11 — Designing Effective Input"
+readingTime: 15 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+**Input** is how data gets into the system, and it sets a hard ceiling on
+everything downstream: the quality of the output can never exceed the quality of
+the input. Input design is about capturing each fact accurately, once, with as
+little effort and as little chance of error as possible.
+
+## Objectives
+
+Good input design aims for:
+
+- **Effectiveness** — it serves a specific purpose.
+- **Accuracy** — it is hard to enter something wrong.
+- **Ease of use** — it is straightforward and not tiring.
+- **Consistency** — similar inputs are captured the same way everywhere.
+- **Simplicity** — it keeps attention on the task.
+- **Attractiveness** — people are willing to use it.
+
+## Paper form design
+
+Even now, a lot of data starts life on a paper form, and a badly designed one
+produces bad data.
+
+### Make it easy to fill in
+
+**Form flow** should follow how a person reads — left to right and top to bottom —
+and group related fields so the eye and the pen move as little as possible.
+
+A form has **seven sections**: the **heading** (what the form is), **identification
+and access** (form number, who may use it), **instructions**, the **body** (the
+main fields), **signature and verification**, **totals**, and **comments**. Not
+every form needs all seven, but knowing the list stops you from forgetting one.
+
+### Captioning
+
+The **caption** tells the person what a field is for, and there are several
+styles.
+
+<Figure
+  src="lec11/caption-alternatives.png"
+  alt="A form showing several captioning styles: a below-line caption where the label sits under the blank, a boxed caption where the label is printed inside the field box, a vertical checklist and a horizontal checklist for 'check off method of travel' with options such as airplane, train, company car, personal car."
+  caption="Caption styles: line and below-line captions, boxed captions, and vertical versus horizontal checklists."
+  source="Lecture 11, slide 10"
+/>
+
+The options include a **line caption** (label beside the blank), a **boxed
+caption** (label inside the field), a **table caption** (column headings over
+rows of blanks), and **checklists** laid out vertically or horizontally for
+choosing among alternatives. Consistency across the form matters more than which
+style you pick.
+
+### The other goals
+
+Beyond easy completion, a form must **meet its intended purpose** (specialty
+forms — multi-part, continuous-feed, machine-readable — for specific needs),
+**ensure accurate completion** (layout and instructions that make errors hard),
+and **stay attractive** (uncluttered, so people are drawn into completing it).
+Computer-assisted form design tools, and tools that scan an existing paper form
+and turn its regions into fillable fields, speed this up. Forms in use should be
+**controlled** — each one still serving its purpose, none duplicating another.
+
+## Display and web forms
+
+On screen, the guidelines converge with output design: keep the **display
+simple** (heading, body, comments and instructions — nothing more), keep it
+**consistent** (the same information in the same place on every screen),
+**facilitate movement** (the three-clicks rule — any screen reachable in about
+three clicks), and make it **attractive** enough to hold attention. **Icons** —
+small pictorial symbols for actions — help when they are recognisable, and hurt
+when they are guesswork.
+
+## GUI controls
+
+The core of input design on screen is choosing the right **control** for each
+field.
+
+<Figure
+  src="lec11/gui-form-example.png"
+  alt="A data entry form titled 'Add Customer Order' with left-aligned captions and text boxes for customer number, name, street, city, telephone, email, current balance, credit limit and payment type; check boxes for high volume discount and first time purchase; a radio button group for customer type (individual, corporate customer, non-profit, federal government, local or state government, educational institution); and a row of command buttons including navigation arrows and 'Add Order Details'."
+  caption="A form built from GUI controls — text boxes, check boxes, a radio group for mutually exclusive choices, and command buttons."
+  source="Lecture 11, slide 24"
+  scroll
+/>
+
+- **Text box** — free text. Size it to the expected content; caption to the left
+  or above.
+- **Check box** — a **non-exclusive** choice; label to the right. Several can be
+  ticked at once.
+- **Option / radio button** — an **exclusive** choice within a group; label to
+  the right. Exactly one is selected.
+- **List and drop-down list** — a choice from many options when space is tight;
+  put a common default at the top.
+- **Tab control** — one tab per feature area, most-used tabs first.
+- **Slider and spin button** — a value on a continuous range.
+- **Text area** — a larger block of text, scrollable.
+- **Message box** — a warning or feedback in a dialog.
+- **Command button** — an action: Submit, Clear, and so on.
+
+<Figure
+  src="lec11/sliders-spin-buttons.png"
+  alt="A colour picker dialog showing a two-dimensional colour map, tabs for 'True Color' and 'Custom Palette', radio buttons to choose the RGB or HSV colour model, and three rows each with a slider and a spin button for the red, green, and blue values, plus OK, Cancel, and Help command buttons."
+  caption="Sliders and spin buttons for values on a continuous range, in a colour picker."
+  source="Lecture 11, slide 35"
+  scroll
+/>
+
+<Note label="The exclusive/non-exclusive rule">
+If the choices are mutually exclusive, use radio buttons or a drop-down. If more
+than one can be true at once, use check boxes. Getting this wrong is the most
+common input-control mistake.
+</Note>
+
+### Controls, values, and hidden fields
+
+Every control **stores a value**; a web form submits those values as name/value
+pairs. **Hidden fields** carry a name and value that the user never sees and that
+take no space — used to pass state between pages. **Event-response charts** list
+the events a page must handle and what each should do, which is how the page's
+behaviour is planned.
+
+**HTML5** adds input types that render as ordinary text boxes on a desktop but
+become specialised controls on a phone or tablet: `placeholder` help text, a
+`datalist` of suggestions, and dedicated date, time, email, and number controls
+that summon the right keyboard.
+
+## Colour
+
+Colour is used to contrast foreground and background, highlight important fields,
+flag errors, and group related items. The most legible foreground-on-background
+combinations are black on yellow, green on white, blue on white, and white on
+blue — and colour should never be the *only* channel carrying meaning.
+
+## Web fill-in forms
+
+For a web form: provide clear instructions, demonstrate a logical entry sequence,
+include exactly two basic buttons — **Submit** and **Clear** — break a long form
+into sections or pages, and validate as early as possible so the user learns
+about a bad entry before they have moved on.
+
+## Where this idea shows up now
+
+The seven sections of a form and the exclusive/non-exclusive control rule are
+unchanged — they are baked into every form library and design system. Client-side
+validation, input masks, and typed HTML controls are the modern version of
+"design the form so errors are hard to make". The one thing worth carrying
+forward deliberately is the discipline of capturing each fact once, at its
+source: every place a user re-keys something the system already knows is a place
+errors are being manufactured.

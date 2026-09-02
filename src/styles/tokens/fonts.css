@@ -1,0 +1,7 @@
+/* Webfonts.
+   The reference brand (claude.com) ships proprietary anthropicSans / anthropicMono,
+   which cannot be redistributed. These are the nearest Google Fonts matches:
+     anthropicSans  -> Hanken Grotesk (humanist geometric grotesque, same warm o/a shapes)
+     anthropicMono  -> IBM Plex Mono  (warm, slightly squared, low contrast)
+   SUBSTITUTION — swap the @import + --font-* stacks if real licensed files arrive. */
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..800;1,300..800&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap");

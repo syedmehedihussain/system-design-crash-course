@@ -1,0 +1,150 @@
+---
+number: 12
+title: The semester project, end to end
+summary: >-
+  One system carried through every technique in the course, in the order the
+  deliverables build on each other — from the goal statement and rich picture to
+  the DFDs, the UML models, and the input and output design.
+topics:
+  - Applying the whole course
+  - Deliverables in order
+  - Traceability
+source: "Project Tasks List (CSE307)"
+readingTime: 14 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+Every earlier lesson covered one technique. This one is about the sequence: how
+the deliverables of a full analysis-and-design project fit together, each built
+from the one before it, so that the class diagram can be traced back to a
+sentence in the problem statement.
+
+Follow it as a checklist against your own project.
+
+## 1. Frame the problem
+
+**Goal and objectives.** One sentence on what the system is for, then a short list
+of specific, checkable objectives. Every later decision should be traceable to one
+of these.
+
+**History.** How the request arose — what changed, what stopped working, who
+asked. This is context the reader needs to judge whether the objectives are the
+right ones.
+
+**Problems, issues, concerns, opportunities.** The independent things that are
+wrong or could be better, each paired with an objective as in
+[Lecture 3](../03-project-management#where-projects-come-from). If an objective
+has no problem behind it, it is scope creep.
+
+## 2. Describe the solution
+
+**The solution, in prose.** What you are going to build, at a level a
+non-technical stakeholder can follow.
+
+**Stakeholders.** Everyone affected — users, operators, managers, external
+parties — and what each one needs from the system.
+
+**Rich picture.** An informal sketch of the situation, including the human and
+political parts a formal diagram leaves out (see
+[Lecture 4](../04-interactive-methods#stories) and
+[Lecture 2](../02-organizational-modeling)). It is deliberately messy; its job is
+to make sure nothing important was ignored because it did not fit a notation.
+
+**Hardware and software details.** A table of the components the solution needs,
+evaluated as in [Lecture 3](../03-project-management#estimating-resources).
+
+**Key technical features.** The headline functional requirements — the things the
+system must do that justify building it.
+
+## 3. Plan and justify the project
+
+**Methodology.** Choose SDLC, an [agile method](../06-agile-and-prototyping), or an
+[object-oriented approach](../07-uml), and justify it against the conditions in
+[Lecture 1](../01-introduction#choosing-an-approach) — the nature of the problem,
+the team, the tolerance for changing requirements.
+
+**Project management.** Build a
+[work breakdown structure](../03-project-management#breaking-the-work-down), then
+an activity list with durations, dependencies, resources, and costs. Turn that
+into a [Gantt chart](../03-project-management#scheduling) for calendar time and a
+**network diagram** for the critical path.
+
+**Feasibility.** List the expense heads and the expected benefits, build a
+[present value table](../03-project-management#comparing-costs-and-benefits) from
+them, and draw the return-on-investment chart. This is where "should we do this?"
+gets a numeric answer.
+
+## 4. Discover the requirements
+
+Identify the right [discovery method](../04-interactive-methods) with
+justification — interviews, JAD, questionnaires, or the
+[unobtrusive methods](../05-unobtrusive-methods) — and write a plan for using it.
+Then produce the full list of **functional requirements** and at least five
+**nonfunctional requirements**, held to the criteria in
+[Lecture 4](../04-interactive-methods#what-a-requirement-is): consistent,
+complete, feasible, verifiable, traceable.
+
+## 5. Model the processes
+
+**Data flow diagrams**, built top down as in
+[Lecture 8](../08-data-flow-diagrams):
+
+- a **context diagram** — one process, the external entities, the boundary flows;
+- a **level-0 diagram** with at least five processes and the data stores;
+- a **level-1 child diagram** for every process on level 0, each
+  [balanced](../08-data-flow-diagrams#child-diagrams-and-balancing) against its
+  parent.
+
+## 6. Model the objects
+
+The [UML](../07-uml) set, in the order each diagram feeds the next:
+
+- **Use case diagram** — a context-level view, then a subsystem-level view with
+  five subsystems and their use cases, and a written
+  [narration](../07-uml#use-case-modelling) for every use case.
+- **Class diagram** — the entities the use cases reveal, their attributes and
+  methods, and their [relationships](../07-uml#relationships).
+- **Sequence diagram** — the message flow for the important use cases.
+- **Activity diagram** — the workflow of the processes that are complex enough to
+  need one, with [swimlanes](../07-uml#activity-diagrams).
+- **Deployment diagram** — the physical nodes the system runs on and what is
+  installed where.
+
+## 7. Design what people touch
+
+**Input design** ([Lecture 11](../11-input-design)) — the forms and screens, with
+the right [GUI control](../11-input-design#gui-controls) for each field and
+validation planned in.
+
+**Output design** ([Lecture 10](../10-output-design)) — the reports, laid out to
+be scanned, with [honest presentation](../10-output-design#output-bias).
+
+**CRUD matrix** ([Lecture 8](../08-data-flow-diagrams#crud-checking-the-model-against-the-data))
+— the processes against the data entities, checked for entities that are read but
+never created, or created but never read.
+
+## 8. Show it works
+
+**Comparative results.** Put the solution next to the related literature or the
+current state of the art, feature by feature, and describe where it does better
+and why.
+
+<Note label="The thread to keep visible">
+A grader — or a future maintainer — should be able to start at any UML class or
+any DFD process and walk backwards: which use case needs it, which requirement
+the use case satisfies, which objective the requirement serves, which problem the
+objective fixes. If that chain breaks anywhere, something was invented that
+nobody asked for, or something that was asked for got lost.
+</Note>
+
+## Where this idea shows up now
+
+The artefacts have lighter-weight modern equivalents — a one-page product brief,
+a requirements doc or a set of stories, an architecture diagram, API and schema
+definitions, wireframes — but the spine is identical: frame the problem, justify
+the project with numbers, discover what is needed, model the processes and the
+data, design the interface, and keep every piece traceable back to a stated goal.
+Doing it once in full, by hand, is what makes the shortcuts safe to take later.

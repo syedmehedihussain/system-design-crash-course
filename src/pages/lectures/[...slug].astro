@@ -1,0 +1,52 @@
+---
+import { getCollection, render } from 'astro:content';
+import Lecture from '../../layouts/Lecture.astro';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('lectures'))
+    .filter((e) => import.meta.env.DEV || !e.data.draft)
+    .sort((a, b) => a.data.number - b.data.number);
+
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const hrefFor = (id: string) => `${base}/lectures/${id}`;
+
+  return all.map((entry, i) => {
+    const prevEntry = all[i - 1];
+    const nextEntry = all[i + 1];
+    return {
+      params: { slug: entry.id },
+      props: {
+        entry,
+        rail: all.map((e) => ({
+          number: e.data.number,
+          title: e.data.title,
+          href: hrefFor(e.id),
+          current: e.id === entry.id,
+        })),
+        prev: prevEntry
+          ? { href: hrefFor(prevEntry.id), label: prevEntry.data.title }
+          : null,
+        next: nextEntry
+          ? { href: hrefFor(nextEntry.id), label: nextEntry.data.title }
+          : null,
+      },
+    };
+  });
+}
+
+const { entry, rail, prev, next } = Astro.props;
+const { Content } = await render(entry);
+---
+<Lecture
+  number={entry.data.number}
+  title={entry.data.title}
+  summary={entry.data.summary}
+  topics={entry.data.topics}
+  source={entry.data.source}
+  readingTime={entry.data.readingTime}
+  rail={rail}
+  prev={prev}
+  next={next}
+>
+  <Content />
+</Lecture>

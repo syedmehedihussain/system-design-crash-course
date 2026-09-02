@@ -1,0 +1,172 @@
+---
+number: 1
+title: Introduction to systems and the analyst
+summary: >-
+  What a system is, the kinds of information system an organisation runs, what
+  the person called a systems analyst actually does, and the development life
+  cycle that structures the work — plus how to choose which approach to use.
+topics:
+  - Systems thinking
+  - Kinds of information system
+  - The analyst's role
+  - The development life cycle
+source: "Lecture 1 — Course introduction"
+readingTime: 14 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+This course is about changing how an organisation works by changing the systems it
+runs on — and doing that deliberately, with a method, rather than by guesswork.
+This first lesson sets up the vocabulary the rest of the course assumes.
+
+## What a system is
+
+A **system** is a set of interrelated parts that work together toward a purpose,
+where changing one part affects the others. A business is a system. The software
+it runs is a system. A department, a warehouse, a checkout process — all systems,
+nested inside larger ones.
+
+Every system has the same anatomy: **inputs** enter it, **processes** transform
+them, **outputs** leave it, a **boundary** separates it from everything else, and
+that everything else is its **environment**. **Feedback** is output that comes
+back as input and lets the system adjust itself.
+
+<Figure
+  src="lec01/organization-as-system.png"
+  alt="A cloud shape labelled 'System' with 'Inputs' entering from the left, 'Outputs' leaving to the right, and a loop at the top through a triangle labelled 'Goals'."
+  caption="A system: inputs in, outputs out, goals steering it. (From Lecture 2.)"
+  source="Lecture 1, slide 2 area — see Lecture 2, slide 2"
+/>
+
+The two properties that make systems thinking useful are **interrelatedness** —
+you cannot change one part in isolation — and **purpose** — the system exists to
+achieve something, and every part is judged by whether it serves that.
+
+## Kinds of information system
+
+Organisations run several categories of information system, and they stack by how
+much judgement they support.
+
+<Figure
+  src="lec01/system-types-pyramid.png"
+  alt="A pyramid of information system types. From the base up: transaction processing systems; office automation systems and knowledge work systems; management information systems and decision support systems; expert systems; and at the apex executive support systems (ESS), group decision support systems (GDSS), and computer-supported collaborative work systems (CSCWS)."
+  caption="Information systems by the level of decision they support, transaction processing at the base."
+  source="Lecture 1, slide 2"
+/>
+
+- **Transaction processing systems** (TPS) — record the day-to-day operations:
+  orders, payments, shipments. High volume, structured, unglamorous, essential.
+- **Office automation** and **knowledge work systems** — support the people who
+  create and handle information: documents, spreadsheets, schedules, design
+  tools.
+- **Management information systems** (MIS) and **decision support systems** (DSS) —
+  summarise operational data into reports, and let managers explore "what if"
+  questions against it.
+- **Expert systems** — capture the reasoning of a specialist and apply it to new
+  cases.
+- **Executive support**, **group decision support**, and **collaborative work
+  systems** — help senior people and teams make unstructured, high-stakes
+  decisions together.
+
+Newer categories — enterprise systems, ecommerce, mobile and web systems — cut
+across the pyramid rather than sitting at one level.
+
+## The systems analyst
+
+The **systems analyst** is the person who studies how an organisation works,
+decides with its people what should change, and specifies the new system
+precisely enough to build. The role sits between the users, who know the business
+but not the technology, and the developers, who know the technology but not the
+business.
+
+An analyst plays three roles at once: **consultant** (an outside perspective on
+the organisation's problems), **supporting expert** (technical knowledge the
+organisation lacks), and **agent of change** (someone whose presence and
+recommendations will alter how people work, whether or not a line of code is
+written).
+
+## The development life cycle
+
+The work is structured as a **systems development life cycle** (SDLC) — a
+sequence of phases, drawn as a loop because it repeats every time the system is
+revised.
+
+<Figure
+  src="lec01/sdlc-phases.png"
+  alt="A circular diagram of seven SDLC phases: 1 identifying problems, opportunities, and objectives; 2 determining human information requirements; 3 analysing system needs; 4 designing the recommended system; 5 developing and documenting software; 6 testing and maintaining the system; 7 implementing and evaluating the system."
+  caption="The seven phases, as a cycle — the last phase feeds the first."
+  source="Lecture 1, slide 4"
+/>
+
+1. **Identify problems, opportunities, and objectives** — decide what is worth
+   working on and why.
+2. **Determine human information requirements** — find out what the people
+   involved actually need, using [interactive](../04-interactive-methods) and
+   [unobtrusive](../05-unobtrusive-methods) methods.
+3. **Analyse system needs** — model the current and proposed system with
+   [data flow diagrams](../08-data-flow-diagrams),
+   [UML](../07-uml), and [process specifications](../09-process-specifications).
+4. **Design the recommended system** — the [output](../10-output-design) and
+   [input](../11-input-design), the files, the interfaces, the controls.
+5. **Develop and document software** — build it, and write down how it works.
+6. **Test and maintain the system** — verify it, then keep it running.
+7. **Implement and evaluate** — put it into use, train people, and check whether
+   it met the objectives from phase 1.
+
+### Most of the work is maintenance
+
+<Figure
+  src="lec01/new-vs-maintenance.png"
+  alt="A pie chart split into two slices: 'new systems and other activities' at 40 percent, and 'maintenance of existing systems' at 60 percent."
+  caption="Across an IT organisation's effort, most of it goes to keeping existing systems working."
+  source="Lecture 1, slide 5"
+/>
+
+<Figure
+  src="lec01/resources-over-time.png"
+  alt="A graph with 'amount of resources consumed, time and money' on the vertical axis and time on the horizontal. A large hump at 'systems development' before 'installation day', then a low ongoing line that rises again for post-installation bugs, minor changes due to bugs and enhancements, and major changes in both business and technology."
+  caption="A system's cost over its life: a development hump, then a long tail of fixes and changes that eventually exceeds it."
+  source="Lecture 1, slide 6"
+/>
+
+The development project is the visible, expensive-looking part, but over a
+system's life the accumulated cost of bug fixes, small enhancements, and
+adapting to changes in the business and the technology is larger. Designing for
+that tail — making the system understandable and changeable — is part of the job,
+not an afterthought.
+
+## Choosing an approach
+
+The SDLC is not the only way to run the work. Three broad approaches, each suited
+to different conditions:
+
+<Figure
+  src="lec01/choosing-an-approach.png"
+  alt="A table with columns 'choose' and 'when'. The systems development life cycle (SDLC) approach: when systems have been built and documented with SDLC before, documentation of each step matters, upper management is comfortable with it, and there are adequate resources and time. Agile methodologies: when there is a champion of agile in the organisation, applications must be built quickly for a changing environment, a rescue is needed, the customer accepts incremental improvements, and executives and analysts agree with agile principles. Object-oriented methodologies: when the problems modelled fit into classes, the organisation supports UML learning, systems can be added one subsystem at a time, reuse of prior code is possible, and it is acceptable to tackle the hard problems first."
+  caption="When to reach for the SDLC, an agile method, or an object-oriented approach."
+  source="Lecture 1, slide 9"
+/>
+
+Use the **SDLC** when documentation and predictability matter, management expects
+it, and there is time to do each phase properly. Use an
+**[agile](../06-agile-and-prototyping) method** when speed and responsiveness to
+change matter more than a full paper trail, and the customer will accept the
+system growing incrementally. Use an **[object-oriented](../07-uml) approach**
+when the domain decomposes naturally into classes, reuse is likely, and the
+system can be delivered one subsystem at a time.
+
+In practice these blend — an agile project still analyses requirements and
+designs output; an SDLC project still iterates — but the framing helps you pick a
+default.
+
+## Where this idea shows up now
+
+The seven phases still describe what any software project does, whether it calls
+them phases or not: understand the problem, learn what people need, model it,
+design it, build it, ship it, and see if it worked. The maintenance reality is
+stronger than ever — most engineering effort is spent changing systems that
+already exist — which is why the modern emphasis on readable code, tests, and
+observability is really an emphasis on making that long tail survivable.

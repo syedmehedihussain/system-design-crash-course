@@ -1,0 +1,238 @@
+---
+number: 7
+title: Object-oriented analysis with UML
+summary: >-
+  Describing a system as a set of interacting objects — the concepts of object,
+  class, and inheritance, and the UML diagrams that capture what a system does,
+  what it knows, and how it behaves over time.
+topics:
+  - Objects, classes, inheritance
+  - Use case modelling
+  - Activity and sequence diagrams
+  - Class diagrams and statecharts
+source: "Lecture 7 — Object-Oriented Systems Analysis and Design Using UML"
+readingTime: 24 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+Object-oriented analysis describes a system as a collection of **objects** that
+hold their own data and behaviour and interact by sending each other messages. It
+suits systems that are large, complex, and expected to keep changing, because
+grouping data with the code that acts on it — and reusing those groupings —
+contains the cost of change. The **Unified Modeling Language** (UML) is the
+standard set of diagrams for doing this work.
+
+## The core concepts
+
+**Object** — a person, place, or thing relevant to the system: a customer, an
+order, a course section. An object bundles **attributes** (what it knows) with
+**behaviours** (what it can do).
+
+**Class** — the definition shared by a set of objects: the attributes and
+behaviours every object of that class has. `Customer` is a class; a specific
+customer is an object, or *instance*, of it. A class is drawn as a rectangle in
+three bands — name, attributes, methods.
+
+<Figure
+  src="lec07/class-anatomy.png"
+  alt="A UML class rectangle labelled RentalCar, divided into three bands: the class name at the top, attributes (size, colour, make, model) in the middle, and methods or operations (rentOut, checkIn, service) at the bottom, with arrows labelling each band."
+  caption="A class: name, attributes, methods, in three bands."
+  source="Lecture 7, slide 9"
+/>
+
+**Inheritance** — a derived class takes on all the attributes and behaviours of a
+base class and adds or changes some. `Car` and `Truck` both inherit from
+`Vehicle`. Inheritance is what makes reuse concrete: shared behaviour is written
+once, in the base class.
+
+### CRC cards
+
+Before drawing anything, teams often work out the classes with **CRC cards** —
+one index card per class listing its **Class** name, its **Responsibilities**
+(what it must know and do), and its **Collaborators** (the other classes it needs
+to fulfil them). Working through realistic scenarios out loud, moving cards
+around a table, surfaces the classes and their duties cheaply.
+
+## UML in one picture
+
+UML is built from three kinds of element: **things** (classes, interfaces, use
+cases, and so on), **relationships** between them (dependency, association,
+aggregation, composition, generalization; and behavioural ones — includes,
+extends, communicates), and **diagrams** that arrange things and relationships to
+tell a particular kind of story. Diagrams split into **structural** (class,
+object, component, deployment) and **behavioural** (use case, sequence,
+communication, statechart, activity).
+
+<Figure
+  src="lec07/diagram-overview.png"
+  alt="An overview showing how UML diagrams feed one another: the use case diagram and use case scenarios lead to activity, sequence, and communication diagrams, which lead to class diagrams and statechart diagrams."
+  caption="Each diagram feeds the next: use cases lead to behaviour diagrams, which lead to class and state diagrams."
+  source="Lecture 7, slide 26"
+  scroll
+/>
+
+You do not draw all of them. The practical core is: a **use case diagram** to
+scope what the system does, one or more behaviour diagrams to work out how each
+case runs, and a **class diagram** as the structural result.
+
+## Use case modelling
+
+A **use case** describes what the system does from a user's point of view,
+without saying how. It is based on the interactions between an **actor** (a role
+outside the system) and the system, and each use case is one goal the actor
+achieves.
+
+<Figure
+  src="lec07/use-case-diagram.png"
+  alt="A use case diagram for student enrolment: stick-figure actors (Student, Registration, Financial Office, Bookstore, Department) connected to oval use cases such as Add Student, Verify Identity, Enrol in Class, Change Student Information, View Student Information, Purchase Textbook, and Transfer Credits, with include and extend relationships shown as dashed arrows."
+  caption="Actors around the edge, use cases as ovals, include and extend relationships as dashed arrows."
+  source="Lecture 7, slide 28"
+  scroll
+/>
+
+Each oval is expanded into a written **use case scenario** with three sections:
+**identification and initiation** (name, actors, trigger, preconditions), the
+**steps performed** (the main flow of the interaction, numbered), and
+**conditions** (postconditions, assumptions, and open questions). The diagram
+gives the map; the scenarios carry the detail.
+
+## Activity diagrams
+
+An **activity diagram** shows the sequence of activities in a process, including
+which run in order and which run in parallel, and the decisions between them. You
+build it by asking what happens first, what happens next, and where the process
+branches or forks.
+
+<Figure
+  src="lec07/activity-swimlanes.png"
+  alt="An activity diagram divided into three vertical swimlanes labelled client web page, web server, and mainframe, with actions such as submit web form, validate changes, display error message, update student record, and display confirmation, connected by arrows and decision diamonds that cross between the lanes."
+  caption="Swimlanes assign each activity to the part of the system responsible for it."
+  source="Lecture 7, slide 34"
+  scroll
+/>
+
+**Swimlanes** divide the diagram into columns, one per person, team, or system
+component, so you can see not just the order of work but who does each step and
+where control passes between them. Activity diagrams are also a good source for
+**test plans** — every path through the diagram is a case to test — but they are
+not drawn for every use case, only where the flow is complex enough to be worth
+the picture.
+
+## Sequence diagrams
+
+A **sequence diagram** shows a succession of interactions between objects over
+time. Objects run along the top; time runs down. Each object has a **lifeline**,
+and messages between objects are horizontal arrows, ordered top to bottom.
+
+<Figure
+  src="lec07/sequence-diagram.png"
+  alt="A sequence diagram for student admission with lifelines for a new-student user interface, Student, Dorm, and Program objects. Messages flow between them in time order: initialise, return student number, select dorm, return dorm room, select program, return program advisor, student complete."
+  caption="Objects across the top, time down the side, messages as arrows in strict order."
+  source="Lecture 7, slide 39"
+  scroll
+/>
+
+Sequence diagrams are often discussed in three layers: **presentation** (the
+interface classes the user touches), **business** (the control classes that
+coordinate the work), and **persistence** (the entity classes that hold data).
+A **communication diagram** shows the same interactions arranged by object rather
+than by time — useful when the structure of who-talks-to-whom matters more than
+the order.
+
+## Class diagrams
+
+A **class diagram** shows the static structure: the classes, their attributes and
+methods, and the relationships between them. It represents no particular
+processing — it is what the system knows, not what it does.
+
+<Figure
+  src="lec07/class-diagram.png"
+  alt="A class diagram for course offerings: a Department class associated with Course ('has a', 'is for a'), Course linked to Textbook with multiplicity 1 to many, and Course composed of Assignment and Exam parts shown with filled diamonds. Each class lists attributes and methods."
+  caption="Classes with attributes and methods, associations labelled and given multiplicities, whole-part links shown with diamonds."
+  source="Lecture 7, slide 44"
+  scroll
+/>
+
+Attributes are marked **private**, **public**, or **protected**. Methods are
+**standard** (create, read, update, delete — often taken straight from a
+[CRUD matrix](../08-data-flow-diagrams)) or **custom**. **Method overloading** is
+defining the same method name several times with different parameters.
+
+Classes fall into types by role: **entity** classes (real-world things, the ones
+an ER diagram would show), **interface** or **boundary** classes (how users work
+with the system), **control** classes (coordinate the flow of activity), and
+**abstract** classes (general classes with no direct instances, used only as a
+base to inherit from).
+
+### Relationships
+
+- **Association** — the simplest link, "a student enrols in a section". An
+  **association class** hangs extra data on the link itself (the grade for *this*
+  student in *this* section).
+- **Aggregation** — a "has a" whole-part link where the parts can exist without
+  the whole. Drawn with a hollow diamond.
+- **Composition** — a stronger whole-part link: the whole is responsible for the
+  parts, and deleting the whole deletes them. Drawn with a filled diamond.
+- **Generalization** — the "is a" link between a general class and a more specific
+  one.
+
+<Figure
+  src="lec07/generalization.png"
+  alt="A generalization/specialization diagram: a Person class at the top with common attributes, specialised into Student and Employee, and Employee further specialised into Faculty and Administrator, each subclass adding its own attributes and methods."
+  caption="A generalization/specialization diagram — a class diagram refined into an inheritance hierarchy."
+  source="Lecture 7, slide 69"
+  scroll
+/>
+
+**Generalization** gives you **inheritance** (subclasses reuse the base) and
+**polymorphism** (several classes implement the same method name in their own
+way, and the caller does not need to know which).
+
+## Statechart diagrams
+
+A **statechart** examines the states one object can be in over its lifetime and
+the events that move it between them. You draw one for a single class when that
+class has a complex life cycle — many states, or behaviour that depends on which
+state it is in.
+
+<Figure
+  src="lec07/statechart.png"
+  alt="A statechart for a student: from Potential Student to Accepted Student, Dorm Assigned Student, Program Student, Current Student, Continuing Student, and finally Graduated Student, with transitions labelled by the event that causes each, such as 'accepted', 'dorm selected', 'program selected', 'successful course completion', and 'graduation requirements complete'."
+  caption="One object's life as a set of states and the events that move it between them."
+  source="Lecture 7, slide 75"
+/>
+
+## Packages
+
+A **package** is a container for other UML elements, used to show how the system
+is partitioned. Use cases, classes, or components can be grouped into packages so
+a large model can be read one part at a time.
+
+<Figure
+  src="lec07/packages.png"
+  alt="A diagram showing use cases grouped into two package rectangles — one for student-facing use cases, one for faculty-facing use cases — each package containing several use case ovals connected to their actors."
+  caption="Use cases grouped into packages so a large model can be read in sections."
+  source="Lecture 7, slide 77"
+  scroll
+/>
+
+## Putting it together
+
+The order of work in UML: define the **use case model**, write the **scenarios**,
+draw **activity** and **sequence** diagrams for the cases that need them, derive
+the **class diagram** from the classes those diagrams reveal, add **statecharts**
+for classes with complex lifecycles, and group everything into **packages**.
+
+## Where this idea shows up now
+
+Class diagrams are still how object models, ORM schemas, and API type
+definitions are sketched. Sequence diagrams are the standard way to explain a
+request flow across services. Statecharts underlie state machines in UI
+frameworks and workflow engines. Use cases have largely been replaced by user
+stories, which carry the same "what the actor wants, not how" discipline in a
+lighter form. The lasting habit is choosing the diagram to the question:
+structure gets a class diagram, an interaction gets a sequence diagram, a
+lifecycle gets a statechart.

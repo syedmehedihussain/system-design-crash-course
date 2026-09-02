@@ -1,0 +1,50 @@
+---
+import Page from './Page.astro';
+import LectureRail from '../components/LectureRail.astro';
+import Pager from '../components/Pager.astro';
+
+interface RailItem {
+  number: number;
+  title: string;
+  href: string;
+  current: boolean;
+}
+interface PagerLink {
+  href: string;
+  label: string;
+}
+interface Props {
+  number: number;
+  title: string;
+  summary: string;
+  topics?: string[];
+  source: string;
+  readingTime?: string;
+  rail: RailItem[];
+  prev?: PagerLink | null;
+  next?: PagerLink | null;
+}
+const { number, title, summary, topics = [], source, readingTime, rail, prev, next } =
+  Astro.props;
+const pad = String(number).padStart(2, '0');
+---
+<Page title={`${title} — System design archive`} description={summary} mainClass="lecture-main">
+  <div class="lecture">
+    <LectureRail items={rail} />
+    <article class="article">
+      <header class="lecture-head">
+        <p class="eyebrow">Lecture {pad}</p>
+        <h1>{title}</h1>
+        <p class="summary">{summary}</p>
+        <p class="meta">
+          {readingTime && <span>{readingTime}</span>}
+          <span>Source · {source}</span>
+        </p>
+      </header>
+      <div class="prose">
+        <slot />
+      </div>
+      <Pager prev={prev} next={next} />
+    </article>
+  </div>
+</Page>

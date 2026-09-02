@@ -1,0 +1,487 @@
+---
+number: 13
+title: A worked project, from goal statement to class diagram
+summary: >-
+  One real system — a regional food bank's intake, inventory, and distribution —
+  carried through every step of the previous lecture, with the actual artefacts
+  filled in: the objectives, the cost-benefit table, the requirements, the DFDs,
+  the UML, the screens, and the traceability that ties them together.
+topics:
+  - A full worked example
+  - Every deliverable, filled in
+  - Traceability in practice
+source: "Worked example — written for this archive"
+readingTime: 24 min read
+draft: false
+---
+
+import Note from '../../components/Note.astro';
+
+[Lecture 12](../12-semester-project) gave the sequence of deliverables as a
+checklist. This lesson runs one system through that exact sequence with the
+artefacts actually written out, so you can see what each step produces and how
+each one is built from the last.
+
+The system is small enough to hold in your head and real enough to have the
+tensions that make analysis worth doing.
+
+## The situation
+
+The **Riverside Food Bank** is a regional nonprofit. It takes in donated food —
+from supermarket surplus, food drives, and a government commodities program — and
+passes it to about 40 partner agencies: soup kitchens, shelters, and neighbourhood
+pantries that hand it to households.
+
+It grew from 12 partner agencies to 40 in three years. It still runs on a shared
+stock spreadsheet, a paper clipboard for the weekly count, and an email inbox
+where agencies send orders. In 2025 a manufacturer recalled a batch of peanut
+butter and it took two staff three days of paper-tracing to work out which
+agencies had received it. A funder has said that from 2027 it will require
+lot-level traceability for every grant-funded item.
+
+<Note label="Why there are no figures here">
+Every other lecture's diagrams are screenshots of the original course slides.
+This case is written for the archive, so any diagram would have to be drawn by
+hand — which the archive does not do. The models below are therefore described
+in prose and tables. In a real project you would draw them.
+</Note>
+
+## 1. Frame the problem
+
+**Goal.** Give the food bank one system that records every item from the moment
+it is donated to the moment a partner agency receives it — so staff can see
+current stock, allocate it fairly, trace any lot in a recall, and report to
+funders without re-keying data.
+
+**Objectives.** Specific and checkable; every later decision has to trace to one
+of these.
+
+- **O1** — Any staff member can see current stock by category and by lot in under
+  two seconds, from a warehouse workstation or a phone.
+- **O2** — Every outbound allocation is recorded against one partner agency and a
+  specific set of lots, and no allocation can exceed recorded stock.
+- **O3** — Given a recall notice, produce the list of affected lots and the
+  agencies that received them in under ten minutes.
+- **O4** — Generate the quarterly funder report directly from system data, with
+  no manual re-keying.
+- **O5** — A partner agency can place an order and see its status without phoning
+  or emailing the warehouse.
+
+**History.** The agency count more than tripled in three years while the tools
+did not change. The 2025 recall exposed the lack of a link between a donated lot
+and the agencies that got it. A funder has flagged that the quarterly report and
+the annual audit disagree on totals, because the report is assembled by hand.
+
+**Problems and opportunities, each paired with an objective.** If an objective
+has no problem behind it, it is scope creep; if a problem has no objective, it is
+being ignored.
+
+| # | Problem or opportunity | Kind | Objective |
+|---|---|---|---|
+| P1 | Stock is counted weekly on a clipboard; the spreadsheet is always stale | Problem | O1 |
+| P2 | Allocations are agreed by email; two coordinators sometimes promise the same pallet | Problem | O2 |
+| P3 | Nothing links a donated lot to the agencies that received it | Problem | O3 |
+| P4 | The quarterly report is rebuilt by hand from three spreadsheets and the inbox | Problem | O4 |
+| P5 | Agencies cannot see what is available, so they over-ask "to be safe" | Problem | O5 |
+| P6 | Most donated cases already carry a GS1 barcode with a lot code; scanners are cheap | Opportunity | O1, O3 |
+
+## 2. Describe the solution
+
+**In prose.** A web application with two faces. In the **warehouse**, volunteers
+scan cases in at the receiving desk; each scan creates an *inventory lot* tied to
+a *donation*. Coordinators build *allocations* against live stock; the system
+refuses an allocation that exceeds what is on hand and reserves the chosen lots
+so no one else can promise them. Drivers get a pick list per stop and confirm
+each delivery. In the **agency portal**, partner staff log in, see which
+categories are available, place orders, and watch them move through a short set of
+statuses. A reporting module rolls the movement history up into funder-ready
+figures, and a recall search takes a lot code or barcode and walks forward to the
+agencies that received it.
+
+**Stakeholders.**
+
+| Stakeholder | What they need from the system |
+|---|---|
+| Warehouse coordinator | Live stock; an allocation tool that cannot oversell; pick lists |
+| Receiving volunteer | Fast scan-in, little typing, works on a tablet |
+| Delivery driver | Today's route, a pick list per stop, one-tap delivery confirmation |
+| Partner-agency staff | See what is available, order, track status, see their own history |
+| Executive director | Quarterly and ad-hoc reports; a recall response; a fair-share view |
+| Funder / auditor | Consistent, traceable pounds-in and pounds-out figures |
+| Health authority | On a recall, proof of where a lot went and that it was pulled |
+| Part-time IT volunteer | Something they can host, back up, and restore without a full-time admin |
+
+**Rich picture — described.** The informal sketch would show the warehouse, the
+donors feeding it, the agencies pulling from it, and the funder watching the
+totals. It would also show the parts a clean diagram leaves out: two large
+agencies have historically received more because their directors sit on the
+board; the receiving volunteers are retirees who dislike fiddly screens; the
+director wants "fair share" but has never put a number on it; and the 2027 funder
+mandate sits over the whole thing as a deadline. The picture's job is to make
+sure none of that gets designed away just because it does not fit a notation.
+
+**Hardware and software.**
+
+| Component | Choice | Why |
+|---|---|---|
+| App hosting | Managed container platform, smallest tier | No full-time admin; predictable ~$30/mo |
+| Database | Managed PostgreSQL | Transactions matter for "cannot oversell"; managed backups |
+| Client devices | Two refurbished tablets (receiving, driver); staff use their own phones and PCs | Lowest cost; the tablet camera is the scanner |
+| Barcode scanning | Camera-based for GS1 GTIN + lot, plus two USB scanners at the receiving desk | Cases already carry the barcodes |
+| Accounts | Email and password for staff; one shared login per agency | Small user base; agency staff turn over often |
+
+**Key technical features** — the headline functional requirements:
+
+- Scan-in that builds a lot record from a GS1 barcode (product, lot, best-by).
+- Allocation that is checked against live stock in one transaction and reserves
+  the lots it uses.
+- An agency ordering portal with status tracking.
+- A forward trace from any lot or product code to the receiving agencies.
+- A one-click quarterly funder report.
+
+## 3. Plan and justify the project
+
+**Methodology.** An **agile, incremental** build, justified against the table in
+[Lecture 1](../01-introduction#choosing-an-approach): requirements will shift as
+agencies react to the portal; there is a champion (the new operations manager);
+the organisation needs something usable before the 2027 mandate; the director
+accepts incremental delivery. But the requirements and the data model are
+documented to full [SDLC](../01-introduction#the-development-life-cycle) standard,
+because a funder audit expects a written specification and because the IT
+volunteer is replaced every year or two and has to be able to pick the system up
+cold.
+
+**Work breakdown.** Built top-down as in
+[Lecture 3](../03-project-management#breaking-the-work-down):
+
+1. Discovery — interviews, shadow the receiving desk, collect the current forms
+2. Analysis — requirements document, DFDs, data model, UML
+3. Warehouse increment — scan-in, stock view, allocation, pick and confirm
+4. Portal increment — catalogue, ordering, status, agency history
+5. Reporting increment — funder report, recall trace, fair-share view
+6. Rollout — migrate the spreadsheets, train volunteers, cut over
+7. Project management and QA — throughout
+
+**Activity list** (the spine of it), with durations, dependencies, and staff:
+
+| ID | Activity | Days | After | Who |
+|---|---|---|---|---|
+| A | Interviews and shadowing | 8 | — | Analyst |
+| B | Requirements document | 5 | A | Analyst |
+| C | DFDs, data model, UML | 7 | B | Analyst |
+| D | Warehouse increment | 20 | C | 2 devs |
+| E | Portal increment | 15 | D | 2 devs |
+| F | Reporting and recall trace | 10 | D | 1 dev |
+| G | Data-migration scripts | 6 | C | 1 dev |
+| H | Training materials | 4 | E | Analyst |
+| I | Pilot with five agencies | 10 | E, F, G | All |
+| J | Full cutover | 3 | I, H | All |
+
+**Schedule.** The Gantt chart lays these on calendar time; the network diagram
+finds the [critical path](../03-project-management#scheduling): **A → B → C → D →
+E → I → J**, totalling 68 working days, about 14 weeks. F and G run in parallel
+and carry slack — but if E slips, the whole project slips, so E is where to watch.
+
+**Feasibility.** Expenses and benefits, then a
+[present-value table](../03-project-management#comparing-costs-and-benefits).
+
+- *One-time:* analyst ~25 days at $400 ≈ $10,000; development ~85 person-days at
+  $450 ≈ $38,000; two tablets and two scanners ≈ $700. **≈ $48,700.**
+- *Recurring:* hosting, database, and a small support retainer ≈ **$3,000 / year.**
+- *Quantified benefits / year:* coordinator time saved on the manual count and
+  the allocation email, ~300 hours at $22 ≈ $6,600; the quarterly report from
+  five days to half a day ≈ $3,200; less over-ordering ≈ $4,000; less spoilage
+  from picking oldest-first ≈ $6,000. **≈ $19,800 / year**, so net of recurring
+  cost, **$16,800 / year.**
+- *Unpriced:* recall response from three days to under an hour, and meeting the
+  2027 mandate — either of which alone justifies the project.
+
+| Year | Cost | Benefit | Net | × PV (8%) | PV of net |
+|---|---|---|---|---|---|
+| 0 | 48,700 | 0 | −48,700 | 1.000 | −48,700 |
+| 1 | 3,000 | 19,800 | 16,800 | 0.926 | 15,557 |
+| 2 | 3,000 | 19,800 | 16,800 | 0.857 | 14,398 |
+| 3 | 3,000 | 19,800 | 16,800 | 0.794 | 13,339 |
+| 4 | 3,000 | 19,800 | 16,800 | 0.735 | 12,348 |
+| 5 | 3,000 | 19,800 | 16,800 | 0.681 | 11,441 |
+| | | | | **NPV** | **+18,383** |
+
+Net present value over five years is about **+$18,000**; discounted payback is
+about **3.4 years**. The return-on-investment chart would show cumulative net
+crossing zero partway through year four. Given the mandate, the numbers only have
+to show the project is not wasteful — and they do.
+
+## 4. Discover the requirements
+
+**Method, with justification.** Interviews plus **observation** — shadowing a
+receiving shift and one delivery run — plus **document sampling** of the stock
+spreadsheet, an email order thread, last year's funder report, and the 2025
+recall paper trail. Not questionnaires: the population is tiny (eight staff, 40
+agencies) and the work is physical, so watching it beats a form. One
+[JAD](../04-interactive-methods#joint-application-design) session with the three
+coordinators and the director settles what "fair share" means numerically.
+
+**Functional requirements** — numbered so every later model can point back.
+
+- **FR1** — Record a donation: donor, date, source type (retail, drive,
+  government).
+- **FR2** — On scan-in, create an inventory lot with product code, description,
+  category, lot code, best-by date, unit count, and weight, linked to a donation.
+  *(O1, O3)*
+- **FR3** — Provide a manual entry path for items with no barcode. *(O1)*
+- **FR4** — Show current stock by category and by lot, with total weight, updated
+  on every movement. *(O1)*
+- **FR5** — Create an allocation: choose an agency, add lines by category or by
+  specific lot, with quantities. *(O2)*
+- **FR6** — In one transaction, reject or reduce any allocation line that exceeds
+  available (unreserved) stock. *(O2)*
+- **FR7** — Reserve lots when an allocation is confirmed; release them if it is
+  cancelled. *(O2)*
+- **FR8** — Generate a pick list per allocation, ordered by warehouse location.
+- **FR9** — Confirm a pick or delivery: move the stock out, stamped with the
+  receiving agency, the timestamp, and the staff member or driver. *(O2, O3)*
+- **FR10** — Agency portal: browse available categories with approximate
+  quantities. *(O5)*
+- **FR11** — Agency portal: submit an order and see its status — submitted,
+  approved, being picked, out for delivery, received. *(O5)*
+- **FR12** — Agency portal: view this agency's own order and receipt history.
+  *(O5)*
+- **FR13** — Recall search: given a product code or lot code, list every
+  allocation and delivery that included it and the agencies involved. *(O3)*
+- **FR14** — Quarterly report: weight received and distributed, by category, with
+  a selectable date range and the agencies served. *(O4)*
+- **FR15** — Fair-share view: distributed weight per agency per quarter against
+  that agency's registered household count.
+
+**Nonfunctional requirements** — each measurable, per the criteria in
+[Lecture 4](../04-interactive-methods#what-a-requirement-is).
+
+- **NFR1** — The stock view returns in under two seconds at the 95th percentile
+  with a year of data (~60,000 lots).
+- **NFR2** — Oversell rate is zero, enforced by a database constraint and proved
+  by a concurrency test, not by a warning message.
+- **NFR3** — A recall search returns complete results within ten minutes of staff
+  effort (system time under five seconds).
+- **NFR4** — The receiving flow is usable one-handed on a five-year-old tablet
+  over warehouse Wi-Fi.
+- **NFR5** — The database is backed up daily; a documented restore is tested
+  quarterly; the recovery point is at most 24 hours.
+- **NFR6** — An agency login can see only that agency's orders and history,
+  verified by an authorisation test per role.
+- **NFR7** — *Desirable, revisit after the pilot:* scan-in stays usable and
+  queues during a 30-minute internet outage, syncing on reconnect. Flagged
+  because its feasibility is unclear until the warehouse network is measured.
+
+## 5. Model the processes
+
+Built top-down as in [Lecture 8](../08-data-flow-diagrams).
+
+**Context diagram.** One process — *Food Bank Distribution System*. External
+entities: **Donor**, **Partner Agency**, **Delivery Driver**, **Funder**.
+Warehouse staff are inside the boundary — they are the system's operators. Driver
+is modelled as external because they touch only a narrow mobile view. Boundary
+flows:
+
+- Donor → donation manifest; System → Donor: donation receipt
+- Partner Agency → order; System → Partner Agency: availability list, order status
+- System → Driver: route and pick list; Driver → System: delivery confirmation
+- System → Funder: quarterly report
+
+**Level-0 diagram** — seven processes and six data stores:
+
+1. **Receive donations** — in: manifest, scanned cases; writes `DONATION`,
+   `INVENTORY LOT`, and an `IN` movement.
+2. **Maintain stock view** — reads `INVENTORY LOT` and `MOVEMENT`; out: stock
+   figures to staff.
+3. **Handle agency orders** — in: order; writes `ORDER`; reads `INVENTORY LOT`;
+   out: status to the agency.
+4. **Allocate and pick** — in: an approved order; reads and reserves
+   `INVENTORY LOT`; writes `ALLOCATION`; out: a pick list.
+5. **Confirm delivery** — in: delivery confirmation; writes an `OUT` `MOVEMENT`;
+   updates `ALLOCATION` and `ORDER`.
+6. **Produce reports and recall traces** — reads `DONATION`, `MOVEMENT`,
+   `INVENTORY LOT`, `AGENCY`; out: funder report, recall list.
+7. **Manage agencies** — admin maintenance of `AGENCY`.
+
+Data stores: `DONATION`, `INVENTORY LOT`, `MOVEMENT`, `ALLOCATION`, `ORDER`,
+`AGENCY`.
+
+**Level-1 child diagram for process 4, "Allocate and pick"**, decomposed and
+[balanced](../08-data-flow-diagrams#child-diagrams-and-balancing) against its
+parent:
+
+- **4.1 Check availability** — reads `INVENTORY LOT`; rejects or trims lines that
+  exceed unreserved stock.
+- **4.2 Reserve lots** — writes the reserved quantity on `INVENTORY LOT`; creates
+  the `ALLOCATION`.
+- **4.3 Generate pick list** — reads `ALLOCATION` and each lot's location.
+- **4.4 Record picked** — writes an `OUT` `MOVEMENT` with status "picked";
+  updates `ALLOCATION`.
+
+The inflow to process 4 (an approved order) and its outflows (the pick list, the
+reserved-lot updates, the allocation record) all appear on the child. It
+balances.
+
+## 6. Model the objects
+
+The [UML](../07-uml) set, each diagram feeding the next.
+
+**Use-case diagram.** Context level: actors are Warehouse Staff, Partner Agency,
+Driver, and Director. Subsystem level — five subsystems:
+
+1. **Donation Intake** — log donation, scan case in, enter a non-barcoded item
+2. **Inventory** — view stock, adjust or write off, search a lot
+3. **Ordering** — submit order *(Agency)*, review order *(Staff)*, track order
+   *(Agency)*
+4. **Fulfilment** — allocate stock, reserve lots, generate pick list, confirm
+   delivery
+5. **Reporting & Compliance** — run funder report, run recall trace, view
+   fair-share
+
+**One use case, narrated — "Allocate stock".**
+
+- **Actor:** warehouse coordinator. **Precondition:** an approved order exists.
+- **Main flow:** (1) the coordinator opens the order; (2) the system shows each
+  line with its available quantity; (3) the coordinator accepts the suggested
+  lots or picks specific ones, oldest best-by first; (4) the coordinator
+  confirms; (5) the system, in one transaction, re-checks availability, marks the
+  chosen quantities reserved, creates an `ALLOCATION` linked to the order, and
+  sets the order to "being picked"; (6) the system generates the pick list.
+- **Alternate 3a:** a line exceeds available stock — the system highlights it and
+  offers the lower quantity or a substitute category; the coordinator adjusts the
+  line or splits the remainder to a back-order.
+- **Alternate 5a:** another coordinator reserved one of the lots a moment earlier
+  — the transaction's re-check fails, the system reloads availability, and the
+  coordinator redoes the affected line.
+- **Postcondition:** reserved stock never exceeds physical stock; the order is on
+  the pick queue.
+
+**Class diagram** — the classes the use cases reveal, with the attributes and
+methods that matter:
+
+- **Donation** `(id, date, donorName, sourceType)`
+- **InventoryLot** `(id, gtin, description, category, lotCode, bestBy, unitCount,
+  weightKg, reservedCount, location)` — methods `availableCount()`,
+  `reserve(qty)`, `release(qty)`, `moveOut(qty)`
+- **Agency** `(id, name, address, householdCount, active)`
+- **Order** `(id, agencyId, submittedAt, status)`
+- **OrderLine** `(id, category, requestedQty)`
+- **Allocation** `(id, orderId, createdBy, createdAt)`
+- **AllocationLine** `(id, lotId, qty)`
+- **Movement** `(id, lotId, agencyId, type, qty, weightKg, timestamp, staffId)` —
+  an append-only ledger; the reports and the recall trace read only this,
+  `InventoryLot`, and `Agency`
+- **User** `(id, name, role, agencyId?)`
+
+Relationships: Donation `1—*` InventoryLot; Agency `1—*` Order; Order `1—*`
+OrderLine; Order `1—0..1` Allocation; Allocation `1—*` AllocationLine;
+AllocationLine `*—1` InventoryLot; Movement `*—1` InventoryLot; Movement `*—1`
+Agency (null for `IN` and `ADJUST`).
+
+**Sequence diagram — "Confirm delivery" (described).** Driver app →
+System: `confirmDelivery(allocationId)`. System → Allocation: `markDelivered()`.
+Loop over each AllocationLine: `InventoryLot.moveOut(qty)` and create a
+`Movement(type = OUT)`. System → Order: `setStatus(RECEIVED)`. System → Driver
+app: confirmation and the next stop.
+
+**Activity diagram — order fulfilment (described)**, with
+[swimlanes](../07-uml#activity-diagrams) Agency, Coordinator, System, Driver:
+Agency submits an order → System validates it → Coordinator reviews *(approve /
+adjust / reject)* → System reserves lots and produces the pick list → Driver
+picks and delivers → Driver confirms → System closes the order and notifies the
+Agency.
+
+**Deployment diagram (described).** Browser and tablet nodes → HTTPS → one
+application container on the managed platform → TCP → the managed PostgreSQL
+instance. A nightly job copies the database backup to object storage. There is no
+on-premises server.
+
+## 7. Design what people touch
+
+**Input design — the "Scan case in" screen** ([Lecture 11](../11-input-design)):
+
+| Field | Control | Validation and behaviour |
+|---|---|---|
+| Barcode | Auto-filled from the scanner; text field as fallback | Parse GS1 → product, lot, best-by; on a parse failure, expose the three fields for manual entry |
+| Description | Text, pre-filled from the product catalogue when known | Required; remembered per product code |
+| Category | Dropdown — Produce, Dairy, Protein, Grain, Canned, Non-food | Required |
+| Best-by date | Date picker, pre-filled from the barcode | Required for perishable categories; warn if within seven days |
+| Units in case | Number stepper, default from the catalogue | Integer ≥ 1 |
+| Weight (kg) | Number, default = units × catalogue unit weight | Greater than 0; one decimal |
+| Location | Dropdown of aisle codes, default `RECEIVING` | Required before the lot counts as shelved |
+
+The screen is one-handed, has large targets, advances on the scan or the Enter
+key, shows a running count of cases scanned this session, and needs no mouse.
+
+**Output design — the quarterly funder report** ([Lecture 10](../10-output-design),
+laid out to be scanned, with [honest presentation](../10-output-design#output-bias)):
+
+- **Header** — food bank name, the quarter, the generated date, and the line
+  "figures drawn directly from movement records".
+- **Summary band** — total kg received, total kg distributed, agencies served,
+  households reached.
+- **Table 1, by category** — kg received, kg distributed, share of distribution.
+- **Table 2, by agency** — kg received, households, kg per household, sorted by kg
+  per household so an outlier is visible rather than buried.
+- **Footnote** — any manual adjustments in the period and why.
+- A plain bar for category share. No three-dimensional pie.
+
+**CRUD matrix** ([Lecture 8](../08-data-flow-diagrams#crud-checking-the-model-against-the-data))
+— processes against entities, checked for anything created but never read, or
+read but never created:
+
+| Process ╲ Entity | Donation | InventoryLot | Order | Allocation | Movement | Agency |
+|---|---|---|---|---|---|---|
+| Receive donations | C | C | | | C | R |
+| Maintain stock view | | R | | | R | |
+| Handle agency orders | | R | C U | | | R |
+| Allocate and pick | | R U | R U | C | C | R |
+| Confirm delivery | | U | U | U | C U | R |
+| Reports and recall trace | R | R | R | R | R | R |
+| Manage agencies | | | | | | C R U D |
+
+Every entity is created somewhere and read somewhere. `Agency` is the only entity
+with a delete, and only by an admin — deliberate. `Movement` is only ever updated
+to flip "picked" to "delivered"; otherwise it is append-only, which is what makes
+the audit trail trustworthy. The model passes.
+
+## 8. Show it works
+
+**Comparative results** — the system beside the realistic alternatives:
+
+| Approach | Live stock | Cannot oversell | Lot traceability | Agency self-service | Funder report | Cost / year | Fit |
+|---|---|---|---|---|---|---|---|
+| Spreadsheets and email *(today)* | No | No | No | No | Manual, ~5 days | ~$0 plus labour | Breaks past ~20 agencies |
+| Generic inventory SaaS | Yes | Partial | A lot field, no forward trace | No | Export and rebuild | $1–2k | No portal, no fair-share |
+| Sector-specific hosted platform | Yes | Yes | Yes | Yes | Built in | $6–15k plus onboarding | Strong fit; cost and data ownership are the trade-off |
+| **This system** | Yes | Yes, transactional | Forward trace on an append-only ledger | Yes | One click | ~$3k | Fits the exact workflow and the 2027 mandate; needs a maintainer |
+
+Where it does better, and why: transactional oversell prevention — a database
+constraint, not a warning — and a forward lot trace built on an append-only
+movement ledger, at roughly a third of the hosted platform's cost. The two things
+the mandate and the audit both hinge on are the two things it is built around.
+
+Where it does worse: there is no vendor support line. It depends on the IT
+volunteer and on the written documentation to survive staff turnover — which is
+exactly why steps 2 through 6 were documented to full SDLC standard even though
+the build itself was agile.
+
+<Note label="The thread to keep visible">
+Take any class — say `AllocationLine`. It exists because the "Allocate stock" use
+case (step 6) has to record which lot filled which order line. That use case
+satisfies FR5 through FR7 (step 4). Those requirements serve objective O2 — no
+allocation exceeds recorded stock (step 1). O2 exists because of problem P2, two
+coordinators promising the same pallet (step 1). Walk it the other way and every
+problem on the list ends in running code. Nothing on the class diagram is there
+for a reason you cannot name.
+</Note>
+
+## Where this idea shows up now
+
+The same case done today would produce a one-page brief instead of a history
+section, a Linear project instead of a printed Gantt chart, a `schema` file
+instead of a hand-drawn class diagram, and Figma frames instead of the
+input-design table. The eight moves would be identical, and the traceability
+thread would be the same thread. The [next lesson](../14-ai-and-system-design) is
+about doing exactly this with an AI assistant in the loop — what it makes nearly
+free, and what still has to be decided and checked by a person.

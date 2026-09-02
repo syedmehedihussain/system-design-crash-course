@@ -1,0 +1,144 @@
+---
+number: 2
+title: Modelling organizational systems
+summary: >-
+  Before you can change how an organisation works, you have to describe it — as a
+  system with an environment and feedback, as a set of interdependent parts, and
+  through the models analysts draw: context views, entity-relationship diagrams,
+  and the levels of management they serve.
+topics:
+  - The organisation as a system
+  - Environments and feedback
+  - Levels of management
+  - Entity-relationship diagrams
+source: "Lecture 2 — Modeling Organizational Systems"
+readingTime: 14 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+An analyst cannot improve an organisation they have not described. This lesson is
+about that description — seeing an organisation as a system, understanding what
+sits around it and what feeds back into it, and drawing the first models that
+turn a vague sense of "how things work" into something you can reason about.
+
+## The organisation as a system
+
+An organisation takes **inputs** from its surroundings — materials, money,
+people, information — runs **processes** on them, and sends **outputs** back out:
+products, services, payments, information. Its **goals** steer which processes run
+and how their results are judged.
+
+<Figure
+  src="lec02/organization-as-system.png"
+  alt="A cloud shape labelled 'System', with 'Inputs' entering from the left and 'Outputs' leaving to the right, and a control loop at the top passing through a triangle labelled 'Goals'."
+  caption="The organisation as a system: inputs transformed into outputs, with goals closing the loop."
+  source="Lecture 2, slide 2"
+/>
+
+Everything the organisation does is nested. A department is a **subsystem** of the
+organisation; the organisation is a subsystem of its industry. A change at one
+level ripples up and down.
+
+## Environment and boundaries
+
+The **environment** is everything outside the system boundary that affects it or
+is affected by it: customers, suppliers, competitors, regulators, the labour
+market, the economy. Part of modelling an organisation is deciding exactly where
+its boundary lies — what is inside the system you intend to change, and what is
+an external party you can only send data to or receive data from. That decision
+is made explicit in a **context-level model**, and it is the same decision the
+[context diagram](../08-data-flow-diagrams) forces later.
+
+## Feedback and control
+
+A system stays on course by **feedback** — routing some of its output back as
+input so it can measure results against goals and adjust. Feedback can be
+internal, and it can cross subsystem boundaries: the output of one part becomes
+the input of another.
+
+<Figure
+  src="lec02/feedback-and-environment.png"
+  alt="A cloud labelled with a cycle between 'Production' and 'Marketing'. A note reads 'outputs from marketing become the inputs for production'; another reads 'outputs from production become the inputs for marketing'."
+  caption="Feedback between subsystems: each one's output is another's input, and the environment supplies and absorbs both."
+  source="Lecture 2, slide 3"
+/>
+
+An analyst looks for where feedback is missing — a process whose results nobody
+measures — or where it is too slow to be useful.
+
+## Interrelatedness
+
+The defining property of a system is that its parts **depend on each other**, so
+the same organisation looks different depending on which part you stand in.
+
+<Figure
+  src="lec02/interrelatedness-gears.png"
+  alt="Two clusters of interlocking gears. One is captioned 'how a marketing manager may view the organization', the other 'how a production manager may view the organization' — the same gears, arranged with a different one at the centre."
+  caption="The same organisation, centred differently: a marketing manager and a production manager see different systems."
+  source="Lecture 2, slide 4"
+/>
+
+This is why an analyst interviews people in several roles before modelling
+anything. Each person describes the organisation with themselves at the centre,
+and the real system is the union of those views, not any one of them.
+
+## Levels of management
+
+Organisations make decisions at three levels, and each needs different
+information from the same underlying data:
+
+- **Operational** — the day-to-day. Decisions are frequent, structured, and based
+  on detailed, current data. "Do we have this item in stock?"
+- **Tactical (middle management)** — the medium term. Decisions are periodic and
+  semi-structured, based on summarised data and short-term trends. "Should we
+  reorder from this supplier?"
+- **Strategic (senior management)** — the long term. Decisions are infrequent,
+  unstructured, and draw on aggregated internal data plus a lot of external
+  information. "Should we enter this market?"
+
+A system that serves one level well can be useless to another. The detail an
+operational clerk needs is noise to a strategic planner; the aggregate a planner
+wants hides what the clerk must see.
+
+## Entity-relationship diagrams
+
+One of the first models an analyst draws is an **entity-relationship diagram**
+(ERD) — the things the organisation keeps information about, and how they relate.
+
+<Figure
+  src="lec02/er-diagram.png"
+  alt="An entity-relationship diagram: an 'Employee' box and a 'Phone Extension' box connected by a relationship, read as 'one employee is assigned to one phone extension' and 'a phone extension is listed for an employee'."
+  caption="An ERD: entities as boxes, a named relationship between them, and the multiplicity on each end."
+  source="Lecture 2, slide 7"
+/>
+
+An **entity** is something the organisation stores data about — a person, place,
+thing, or event (employee, department, order). A **relationship** is a meaningful
+association between entities, named as a verb phrase and read in both directions.
+The marks on each end give the **multiplicity** — one-to-one, one-to-many,
+many-to-many.
+
+To build one: list the entities to understand the organisation, choose the key
+entities that keep the problem to a manageable size, identify the primary entity,
+and confirm all of it against what interviews and documents told you. The ERD
+becomes the backbone of the [class diagram](../07-uml) and of the data stores on
+a [data flow diagram](../08-data-flow-diagrams).
+
+<Note label="Why model first">
+The models are not deliverables for their own sake. Drawing a context view forces
+a decision about scope; drawing an ERD forces agreement about what the
+organisation's core "things" even are. Disagreements surface on the whiteboard
+instead of in the built system.
+</Note>
+
+## Where this idea shows up now
+
+"The organisation as a system with an environment" is now called domain modelling
+or context mapping, and the boundary decision is the same one every service
+design starts from. The three levels of management map onto the different
+audiences a modern data platform serves — operational dashboards, analytics, and
+executive reporting off one warehouse. And the ERD never left: it is the entity
+model behind every database schema and API design.

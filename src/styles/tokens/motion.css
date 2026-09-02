@@ -1,0 +1,11 @@
+/* Motion. Color/border/underline transitions only — no keyframes, no transforms,
+   no scroll reveal (design.md §7). */
+:root {
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --duration-fast: 150ms; /* @kind other */
+  --duration-theme: 200ms; /* @kind other */
+  --transition-colors: color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    text-decoration-color var(--duration-fast) var(--ease-standard);
+}

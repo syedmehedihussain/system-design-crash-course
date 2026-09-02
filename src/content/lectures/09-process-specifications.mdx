@@ -1,0 +1,168 @@
+---
+number: 9
+title: Process specifications and structured decisions
+summary: >-
+  Pinning down the logic inside a process so there is no ambiguity — the process
+  specification and the business rules it records, then the three notations for
+  the logic itself: structured English, decision tables, and decision trees.
+topics:
+  - Process specifications
+  - Structured English
+  - Decision tables
+  - Decision trees
+source: "Lecture 9 — Process Specifications and Structured Decisions"
+readingTime: 16 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+A [data flow diagram](../08-data-flow-diagrams) shows *that* a process exists and
+what flows in and out of it. It does not show what the process actually does with
+those inputs. That is the job of a **process specification** — and where the logic
+is a decision, of a **decision table** or **decision tree**.
+
+## Process specifications
+
+A process specification (also called a **minispec**) is written for the
+**primitive** processes on a DFD — the ones at the bottom level that are not
+exploded any further — and sometimes for higher-level ones too. Its goals:
+
+- **Reduce ambiguity.** Writing it forces the analyst to learn exactly how the
+  process works, and often exposes that nobody actually knows.
+- **Get a precise description** of what the process accomplishes, which the
+  programmer can build from and the user can validate.
+- **Check the logic** — a written specification can be inspected for gaps and
+  contradictions in a way a verbal description cannot.
+
+Specifications are **not** written for processes that are pure physical input or
+output, or that are trivial reads and writes with no logic — there is nothing to
+specify.
+
+### What goes in one
+
+A specification records: the **process number** (matching the DFD exactly, so the
+two can be cross-checked), the **process name** (also matching the DFD), a plain
+description of what the process accomplishes, the **input data flows** and
+**output data flows** (using the names from the DFD and data dictionary), the
+**type** of process (batch, online, or manual), whether it **uses pre-written
+code** (name the subprogram), the **process logic** itself, a **reference** to a
+fuller description if the logic does not fit, and a list of **unresolved issues**.
+
+That last item matters: incomplete logic is written down as an open question, and
+those questions become the agenda for the next interview.
+
+### It is policy, not code
+
+The logic description states **business rules and policy**, not programming
+pseudo-code. Business rules take a few standard shapes: definitions of business
+terms, conditions paired with the actions they trigger, data-integrity
+constraints, and computations. "If the customer has ordered within twelve months,
+waive the setup fee" is a business rule; `if (customer.lastOrder > cutoff)` is
+not.
+
+## Structured English
+
+**Structured English** writes logic as a restricted subset of English with
+explicit control structure. Use it when the logic involves formulas or iteration,
+or when decisions are not complex enough to need a table.
+
+Everything is expressed with four building blocks:
+
+<Figure
+  src="lec09/structured-english-types.png"
+  alt="A table of structured English types with descriptions and examples. Sequential structure: a block of instructions with no branching (Action 1, Action 2, Action 3). Decision structure: IF condition A is true THEN implement action A ELSE implement action B ENDIF. Case structure: a special decision where cases are mutually exclusive, written as nested IF/ELSE with a final ELSE print error. Iteration: DO WHILE there are customers, Action 1, ENDDO."
+  caption="The four structures of structured English, with an example of each."
+  source="Lecture 9, slide 25"
+/>
+
+- **Sequence** — do this, then this, then this.
+- **Decision** — `IF condition THEN action A ELSE action B ENDIF`.
+- **Case** — a decision with several mutually exclusive branches and an
+  `ELSE print error` fallthrough.
+- **Iteration** — `DO WHILE ... ENDDO` for a block that repeats.
+
+The **data dictionary** is the starting point: the data elements it defines are
+the nouns the structured English operates on. Its advantages are that it removes
+the ambiguity of ordinary language while staying readable by non-programmers, so
+it works as a communication tool between analyst, user, and developer.
+
+## Decision tables
+
+When the logic is "which action, given this combination of conditions?", a
+**decision table** lays out every combination explicitly. It has four quadrants.
+
+<Figure
+  src="lec09/decision-table-format.png"
+  alt="The standard decision table layout: a two-by-two grid. Top-left quadrant is 'conditions', top-right is 'condition alternatives', bottom-left is 'actions', bottom-right is 'action entries'. Columns across the right side are labelled 'rules'."
+  caption="The four quadrants: conditions and their alternatives on top, actions and their entries below, one rule per column."
+  source="Lecture 9, slide 29"
+/>
+
+Top-left lists the **conditions**. Top-right holds the **condition alternatives** —
+one column per rule, each column a specific combination of Y/N answers.
+Bottom-left lists the **actions**. Bottom-right holds the **action entries** —
+an `X` marking which actions fire for each rule.
+
+<Figure
+  src="lec09/checkout-decision-table.png"
+  alt="A customer checkout decision table. Conditions: order under $50, pays by check with two forms of ID, uses a credit card — with Y/N combinations across four rules. Actions marked with X: complete the sale after verifying signature; complete the sale, no signature needed; call supervisor for approval; communicate electronically with the bank for credit card authorization."
+  caption="A worked table: three conditions, four rules, one action per rule."
+  source="Lecture 9, slide 30"
+/>
+
+### Building one, and checking it
+
+The construction is mechanical: count the conditions (that sets the number of
+condition rows), count the actions (action rows), count the alternatives per
+condition, multiply the alternatives together to get the maximum number of rule
+columns, then fill in the alternatives systematically and mark the actions.
+
+Then check for four problems:
+
+- **Incompleteness** — a combination of conditions with no rule.
+- **Impossible situations** — a rule whose condition combination cannot occur in
+  reality.
+- **Contradictions** — two rules with the same conditions but different actions.
+- **Redundancy** — two rules with different conditions but identical actions,
+  which can often be **combined** by replacing the differing condition with a
+  dash ("don't care").
+
+The strength of a decision table is exactly this: completeness and errors are
+easy to see because every case is a column.
+
+## Decision trees
+
+A **decision tree** shows the same kind of logic when the **order** in which
+conditions are checked matters, or when the branching is deep. It is read left to
+right: a node, a branch per condition alternative, then either another node or a
+leaf that names the action.
+
+<Figure
+  src="lec09/decision-tree.png"
+  alt="A decision tree for non-cash purchase approval at a department store. First split on order under $50 versus $50 or over. Under $50: split on check versus credit card, leading to 'complete the sale after verifying signature' or 'complete the sale, no signature needed'. $50 or over: split on check versus credit card, leading to 'call supervisor for approval' or 'communicate electronically with the bank for authorization'."
+  caption="The same logic as a tree — the order of the splits is visible, which a table hides."
+  source="Lecture 9, slide 46"
+/>
+
+Its advantage over a table is that the **sequence** of checks is immediately
+visible, and conditions that only matter down one branch do not clutter the
+others.
+
+<Note label="Which to use">
+Structured English when actions repeat and iteration or formulas dominate.
+A decision table when you need to be sure every combination of conditions is
+covered. A decision tree when the order of the decisions is itself part of the
+logic.
+</Note>
+
+## Where this idea shows up now
+
+A process specification is an acceptance criterion or a well-written ticket: what
+the thing does, its inputs and outputs, and the open questions, in the language
+of the business. Decision tables are still the right tool for pricing rules,
+eligibility checks, and permission matrices — and they map directly onto the
+parameterised test cases that verify that logic. Decision trees survive
+literally, in rules engines and in the "if this, then that" branching of feature
+flags and routing rules.

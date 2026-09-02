@@ -1,0 +1,257 @@
+---
+number: 3
+title: Project management
+summary: >-
+  How a system project is chosen, sized, scheduled, and kept on track — from the
+  first problem statement through feasibility, cost-benefit analysis, a work
+  breakdown structure, and the Gantt and network schedules that run it.
+topics:
+  - Project initiation
+  - Feasibility
+  - Cost-benefit analysis
+  - Work breakdown and scheduling
+source: "Lecture 3 — Project Management"
+readingTime: 22 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+Before anyone models data or draws a screen, someone has to decide the project is
+worth doing and then organise the work so it actually finishes. That is project
+management, and for a systems analyst it runs in a fairly fixed order: a problem
+is named, the project is selected against other candidates, its feasibility is
+tested, resources are estimated, costs and benefits are compared, the work is
+broken into tasks, and the tasks are scheduled and tracked to completion.
+
+## Where projects come from
+
+A systems project starts as either a **problem** — something in the organisation
+is not working — or an **opportunity** — something could work better, faster, or
+cheaper even though nothing is broken. Analysts notice these by checking the
+output a system produces, watching how people actually work, and listening to the
+complaints and workarounds that build up around a bad process.
+
+Not every problem should become a project. The ones that should tend to share a
+few traits: they respond to a *systems* solution rather than a management or
+training fix, they are backed by someone with authority, the timing is right, and
+solving them moves the organisation toward a real goal — more profit, a stronger
+competitive position, better information for decisions, better service.
+
+### Writing the problem down
+
+The deliverable at this stage is a **problem definition**, and it has a specific
+shape:
+
+- A **problem statement** — a short paragraph on the current situation.
+- A list of **issues** — the independent things that are wrong.
+- A matching list of **objectives** — one per issue, stated so you can tell later
+  whether it was met.
+- **Requirements** — what any acceptable solution must do.
+- **Constraints** — limits on cost, time, technology, or policy that the solution
+  must respect.
+
+The discipline of pairing every issue with an objective point-by-point is what
+stops a project from drifting: if an objective has no issue behind it, someone
+added scope; if an issue has no objective, the project will not fix it.
+
+## Feasibility
+
+**Feasibility analysis** asks whether the project can realistically be done, on
+three fronts at once.
+
+<Figure
+  src="lec03/feasibility-elements.png"
+  alt="A three-band panel listing technical feasibility (add on to present system; technology available to meet users' needs), economic feasibility (analysts' time, cost of study, employees' time, hardware, packaged or custom software), and operational feasibility (whether the system will operate when in service; whether it will be used)."
+  caption="The three feasibility tests and what each one weighs."
+  source="Lecture 3, slide 13"
+/>
+
+**Technical feasibility** — can the current technology, upgraded or added to,
+meet the requirement? If the request needs capabilities that do not exist yet or
+cannot be bought, it is not technically feasible now.
+
+**Economic feasibility** — does the value of the investment exceed its cost in
+time and money? The costs counted here include the analysts' time, the cost of
+the study itself, employees' time during the project, hardware, and either
+packaged software or the cost of building it.
+
+**Operational feasibility** — will the system actually work once it is installed,
+and will people use it? A system that is technically sound and pays for itself on
+paper still fails if the people who are supposed to operate it will not, or
+cannot.
+
+## Estimating resources
+
+Part of feasibility is working out what the system will need to run. Analysts
+estimate current and projected **workloads** — how many transactions, of what
+size, at what times — and compare the existing system's capacity against the
+proposed one's.
+
+For hardware and software the process is: inventory what exists, estimate current
+and future workloads, evaluate options against those numbers, and choose. Options
+include buying equipment outright, and **cloud services** — software, platform,
+or infrastructure rented as a service (SaaS, PaaS, IaaS). Cloud trades control
+and some security exposure for less legacy maintenance, easier acquisition, and
+elastic scaling. A related decision is **BYOD / BYOT** — letting employees use
+their own devices — which can lift morale and lower hardware cost but adds
+security risk and complicates support.
+
+Software itself is either **custom-built**, bought as **commercial off-the-shelf**
+(COTS), or rented from a provider. Each is evaluated on effectiveness,
+efficiency, ease of use, flexibility, documentation quality, vendor support, and
+cost.
+
+## Comparing costs and benefits
+
+Benefits and costs come in two kinds. **Tangible** ones can be measured in money
+— reduced processing time, fewer errors, lower staffing. **Intangible** ones
+cannot be measured precisely but still matter — better decisions, improved
+service, a stronger competitive position, staff morale. A good analysis names the
+intangibles even though it cannot put a firm number on them.
+
+Four techniques compare the numbers:
+
+**Break-even analysis** finds the point where the cumulative cost of the proposed
+system overtakes the cost of keeping the current one. It answers "how long until
+this pays for itself?" and is the right tool when a project must be justified on
+cost rather than benefit.
+
+<Figure
+  src="lec03/break-even-analysis.png"
+  alt="A break-even chart: cumulative costs and cumulative benefits of the proposed system plotted over six years, crossing at about three and a half years, with the payback period shaded, beside a table of yearly cost, cumulative cost, benefits, and cumulative benefits."
+  caption="Cumulative cost and cumulative benefit lines crossing at the payback point — here about three and a half years."
+  source="Lecture 3, slide 52"
+/>
+
+**Payback** is the same idea stated as a single number: the time for accumulated
+benefits to equal accumulated cost.
+
+**Cash-flow analysis** looks at the direction, size, and timing of money moving
+in and out over the system's life — useful for spotting a period where the
+project drains more cash than the organisation can spare, even if it is
+profitable overall.
+
+<Figure
+  src="lec03/cash-flow-analysis.png"
+  alt="A cash-flow table by quarter: revenue, itemised costs (software development, personnel, training, equipment lease, supplies, maintenance), total costs, quarterly cash flow, and cumulative cash flow, which starts deeply negative and turns positive by year two."
+  caption="Cash in and out, quarter by quarter. The cumulative row shows when the project stops costing money net."
+  source="Lecture 3, slide 54"
+  scroll
+/>
+
+**Present value analysis** discounts future money back to what it is worth today,
+using a discount rate, so that costs and benefits spread over years can be
+compared on equal terms. If the present value of benefits does not exceed the
+present value of costs, the project loses money once the time value of money is
+taken into account.
+
+<Note label="Which to use">
+Break-even and payback when the case is about cost and speed of return.
+Cash-flow when timing of spend is the risk. Present value when the project runs
+long enough that a dollar next year is meaningfully worth less than a dollar now.
+</Note>
+
+## Breaking the work down
+
+A **work breakdown structure** (WBS) decomposes the project into tasks small
+enough to estimate and assign. Each task has one deliverable — a tangible outcome
+— a clear owner, and a duration. You build it by decomposition: start with the
+big phases, split each into activities, split those until every leaf is something
+one person can be handed and held to.
+
+<Figure
+  src="lec03/wbs-major-activities.png"
+  alt="A work breakdown structure table with three phases — Analysis (data gathering, data flow and decision analysis, proposal preparation), Design (data entry, input, output, and data organization design), and Implementation (implementation, evaluation) — with a note reading 'break apart the major activities into smaller ones.'"
+  caption="Phases split into activities. Each activity is then split again until it is estimable."
+  source="Lecture 3, slide 63"
+/>
+
+### Estimating task time
+
+Estimates come from a few sources: **experience** with similar work, **analogy**
+to a past project, and **three-point estimation**, where you take an optimistic,
+a most-likely, and a pessimistic figure and combine them so a single bad guess
+does not dominate. **Function point analysis** sizes a system by counting its
+inputs, outputs, inquiries, internal files, and external interfaces, weighting
+each by complexity, to produce a size number that can be turned into effort.
+
+## Scheduling
+
+A schedule turns the WBS into calendar time. Two notations do most of the work.
+
+A **Gantt chart** puts tasks on the vertical axis and time on the horizontal,
+with a bar per task drawn to scale. It shows at a glance what runs in parallel,
+what is behind, and where the project is against today's date. It is simple
+enough to show a non-technical sponsor.
+
+<Figure
+  src="lec03/gantt-chart.png"
+  alt="A Gantt chart for a systems analysis phase: tasks such as conduct interviews, administer questionnaires, analyse data flows, introduce prototype, and prepare proposal, each a horizontal bar over a 23-week axis, shaded to show incomplete, completed, and partially completed work against a marked current week."
+  caption="Tasks as bars over a week axis, shaded by progress against the current week."
+  source="Lecture 3, slide 66"
+/>
+
+A **PERT chart** (also called a network diagram) shows tasks as arrows between
+numbered event nodes, with each arrow labelled by its task and duration. Its
+value is what the Gantt chart hides: the **order of precedence** — which tasks
+must finish before which can start — and the **critical path**, the longest chain
+of dependent tasks, which sets the shortest possible project duration. Any task
+on the critical path that slips delays the whole project; tasks off it have
+**slack**.
+
+<Figure
+  src="lec03/pert-diagram.png"
+  alt="A PERT network diagram with numbered nodes 10 through 80 connected by labelled arrows such as A,3 / C,4 / D,8 / G,3 / H,2, including a lower branch through node 40 with tasks E,5 and F,3, showing parallel paths between the start and end events."
+  caption="Tasks as labelled arrows between event nodes. The longest path from start to end is the critical path."
+  source="Lecture 3, slide 67"
+/>
+
+## Managing risk
+
+Projects fail for reasons that recur, and a **fishbone diagram** (Ishikawa
+diagram) is a way to lay the causes out by category so they can be attacked
+before they bite. The "head" is the failure; the "bones" group contributing
+causes — people, process, tools, requirements — each with its own smaller causes.
+
+<Figure
+  src="lec03/fishbone-diagram.png"
+  alt="A fishbone diagram with categories quality, cost, scope, and time along the top spine and design, testing, coding, and listening along the bottom, each branch listing causes such as excessive defect rate, high staff turnover, scope creep, schedule slips, fear of change, inadequate feedback from testing, and communication breakdown."
+  caption="Failure causes grouped by category so each can be addressed on its own."
+  source="Lecture 3, slide 73"
+/>
+
+Other tools in this area: **expediting**, deliberately speeding up critical-path
+tasks by adding resources; and **earned value management** (EVM), which tracks
+progress in money terms using the budget at completion, the planned value of work
+scheduled by now, the earned value of work actually done, and the actual cost, so
+that "we are 60 percent through the calendar" can be checked against "we have
+delivered 45 percent of the value."
+
+## The team and the proposal
+
+A project team needs a shared work ethic, honesty, competence, and a willingness
+to lead when it is your turn. Teams often run with two leaders at once — a **task
+leader** who drives the work and a **socioemotional leader** who keeps the group
+functioning — and it is rare for one person to be both.
+
+The stage ends with two documents. A **project charter** states, in writing, what
+the user expects, the scope, the schedule, the budget, and who is responsible for
+what. The **systems proposal** is the fuller case for going ahead: cover letter,
+title page, table of contents, executive summary, an outline of the study and its
+methods, the detailed findings, the alternatives considered with recommendations,
+and the cost-benefit analysis. Tables and graphs in the proposal are chosen to
+communicate a specific point, integrated into the text rather than dumped in an
+appendix, and kept to one page where possible.
+
+## Where this idea shows up now
+
+The vocabulary has shifted — sprints and backlogs instead of Gantt bars, story
+points instead of function points, burn-up charts instead of earned value — but
+the underlying moves are the same. Every planning method still forces you to
+decompose work into estimable pieces, find the dependency chain that sets the
+minimum duration, compare what a change is worth against what it costs, and track
+delivered value rather than elapsed time. A modern feasibility spike is a
+technical feasibility test with a deadline; a "definition of ready" is a problem
+definition with its issues and objectives paired up.

@@ -1,0 +1,140 @@
+---
+number: 5
+title: "Requirements: unobtrusive methods"
+summary: >-
+  Learning how a system really works without interrupting the people who run it —
+  choosing a sample, reading the quantitative and qualitative records an
+  organisation already produces, and observing the workplace itself.
+topics:
+  - Sampling
+  - Document analysis
+  - Observation
+  - STROBE
+source: "Lecture 5 — Information Gathering: Unobtrusive Methods"
+readingTime: 16 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+Interviews and questionnaires ask people what they do. **Unobtrusive methods**
+find out without asking — by sampling records, reading the documents an
+organisation already produces, and watching the workplace. They are less
+disruptive, they catch things people would not think to mention or would rather
+not admit, and they are insufficient on their own: they work as a check on, and a
+complement to, the interactive methods in the [previous lesson](../04-interactive-methods).
+
+## Sampling
+
+**Sampling** is systematically selecting a representative subset of a population
+so you can study the subset instead of the whole. An analyst samples to contain
+cost, speed up data gathering, improve effectiveness (a careful look at a good
+sample beats a rushed look at everything), and reduce bias (asking a few people
+chosen well is less skewed than asking whoever is available).
+
+Designing a sample is four decisions: what data to collect, from which population,
+what **type** of sample, and how large.
+
+### Types of sample
+
+<Figure
+  src="lec05/sample-types.png"
+  alt="A two-by-two matrix of sample types. Rows: sample elements selected directly without restrictions, versus selected according to specific criteria. Columns: not based on probability, versus based on probability. Cells: convenience, purposive, simple random, and complex random (systematic, stratified, and cluster). A note reads 'the systems analyst should use a complex random sample if possible.'"
+  caption="Four sample types, by whether selection is restricted and whether it is probability-based."
+  source="Lecture 5, slide 12"
+/>
+
+- **Convenience** — take whatever is easiest to reach. Unrestricted and
+  non-probability; the least reliable.
+- **Purposive** — pick, by judgement, a group that looks knowledgeable and
+  relevant. Still non-probability, but the judgement is deliberate.
+- **Simple random** — every element has an equal chance of selection.
+- **Complex random** — the kind an analyst should prefer when possible.
+  Three variants: **systematic** (take every *n*th record), **stratified**
+  (sample separately within meaningful subgroups so each is represented), and
+  **cluster** (sample whole groups, then everything within the chosen groups).
+
+### Sample size
+
+The size needed is driven by how confident you want to be and how much error you
+will tolerate. The procedure: identify the attribute you are measuring (say,
+order forms containing a mistake), find the records that hold it, estimate the
+proportion of the population that has the attribute, choose a confidence level
+and an acceptable interval, and compute the size from the standard error of the
+proportion. The point is not the formula but the mindset — a sample big enough to
+support the claim you intend to make, and no bigger.
+
+## Reading the records
+
+**Investigation** is discovery and analysis of **hard data**, which comes in two
+kinds.
+
+### Quantitative documents
+
+These carry numbers: **reports used for decision making** (sales, production,
+summary), **performance reports**, **records** that give periodic updates on the
+business, and **data-capture forms**. For forms specifically: collect every form
+in use — official and "bootleg" ones people made themselves — note each form's
+type and intended distribution, and then ask hard questions of the filled-in
+copies. Is the form completed in full, or are fields habitually left blank? Are
+there forms nobody uses? Are official forms being bypassed by unofficial ones?
+Blank fields and bootleg forms are strong signals that the real process differs
+from the documented one.
+
+### Qualitative documents
+
+These carry meaning rather than counts: email and memos, notices on bulletin
+boards, the corporate website, manuals, policy handbooks. You read them for the
+**guiding metaphors** the organisation uses to describe itself ("we run a tight
+ship", "the pipeline"), an **insiders-versus-outsiders** mentality, what counts
+as success or failure, and what is treated as connected to what. A memo's
+language reveals how the organisation actually thinks, which is often not what its
+mission statement says.
+
+## Observation
+
+**Observation** shows what people actually do, as opposed to what they report
+doing — the informal relationships, the shortcuts, the steps that got dropped.
+
+Two structured approaches are worth naming. The **analyst's playscript** records a
+decision-maker's actions in script form: an actor column and an action column,
+each line a single observed action ("reads production report", "calls suppliers
+to discuss deviations"). It captures a role as a sequence of concrete acts.
+
+**STROBE** — STRuctured OBservation of the Environment — reads the decision-maker's
+physical surroundings for evidence that confirms or contradicts what they said in
+an interview. Its elements: office location (who has the corner office; are key
+people dispersed?), desk placement (does it invite conversation, or signal
+power?), stationary equipment (does this person gather and keep information
+personally?), props (a PC, phone, tablet in use?), external information sources
+(trade journals, outside feeds?), lighting and colour (set up for detailed work
+or for casual talk?), and clothing (authoritative, or relaxed; uniforms
+required?).
+
+<Figure
+  src="lec05/strobe-matrix.png"
+  alt="A table pairing characteristics of decision makers with corresponding elements of the physical environment. Examples: gathers information informally maps to warm incandescent lighting and colours; seeks extraorganizational information maps to trade journals present in office; processes data personally maps to PCs or tablets in office; exercises power in decision making maps to a desk placed for power; shares information with others maps to an office that is easily accessible."
+  caption="What a decision-maker is like, and what you would expect to see in their office if it were true."
+  source="Lecture 5, slide 47"
+/>
+
+<Note label="Why it works">
+People describe themselves aspirationally. A room is harder to fake. When the
+interview says "very collaborative" and the desk faces the wall with the door
+closed, the gap itself is a finding.
+</Note>
+
+When STROBE is applied, each element is scored with a small set of symbols for how
+the observation compared with what the interview claimed — confirms, mildly
+confirms, contradicts, mildly contradicts, or is not enough to tell — producing
+an anecdotal list that sits alongside the interview notes.
+
+## Where this idea shows up now
+
+The "documents" are now logs, tickets, analytics dashboards, chat history, and
+commit messages, but reading them is the same discipline: sample enough to
+support a claim, treat blank fields and workarounds as signal, and read the
+language for the team's real model of itself. Watching a recorded user session,
+or shadowing support for a day, is observation; the gap between how a team says it
+works in its docs and how its issue tracker says it works is a STROBE finding.

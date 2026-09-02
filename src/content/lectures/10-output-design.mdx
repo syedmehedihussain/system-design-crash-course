@@ -1,0 +1,166 @@
+---
+number: 10
+title: Designing effective output
+summary: >-
+  The reports, screens, dashboards, and feeds a system produces — matching the
+  content to the delivery method, laying out information so it can be scanned,
+  and avoiding output that quietly biases the person reading it.
+topics:
+  - Output objectives
+  - Choosing an output method
+  - Output bias
+  - Dashboards and web output
+source: "Lecture 10 — Designing Effective Output"
+readingTime: 15 min read
+draft: false
+---
+
+import Figure from '../../components/Figure.astro';
+import Note from '../../components/Note.astro';
+
+**Output** is information the system delivers to a user — a printed report, a
+screen, a dashboard, an email, a feed to another system. It is the part of the
+system most people actually see, and its design decides whether the work the
+system did is usable or not.
+
+## What good output does
+
+Effective output:
+
+- **Serves a specific purpose** for a person or the organisation. Output that
+  exists because it always has, that nobody reads, is waste.
+- **Is meaningful to its user** — in their vocabulary, at their level of detail.
+- **Delivers the right amount** of information: everything needed for the
+  decision, nothing that buries it.
+- **Arrives where and when it is needed**, in a usable format.
+- **Is chosen appropriately** as to method — the right medium for the content and
+  the audience.
+
+## Content and method are linked
+
+You cannot decide *what* the output says without deciding *how* it is delivered,
+because the two constrain each other. A number that must be broadcast to
+thousands of external recipients is designed differently from one that three
+analysts consult on screen.
+
+**External output** goes outside the organisation — utility bills, statements,
+paychecks, advertisements. It differs from internal output in distribution,
+design (it often carries branding and legal text), and the fact that it may be
+turned around and used as input (a payment stub returned with a cheque).
+
+**Internal output** stays inside — summary reports, detailed reports, historical
+reports, exception reports — and can be less formal.
+
+### Choosing a technology
+
+<Figure
+  src="lec10/output-methods-1.png"
+  alt="A comparison table of output methods, part one. Printer: affordable, flexible in type and location, handles large volumes, reliable — but needs operator intervention, has software compatibility problems, may need special supplies, and is environmentally unfriendly. Display screen: interactive, real-time, quiet, exploits database capabilities, good for frequently accessed ephemeral messages — but may need cabling and setup, and needs a separate system for keeping snapshots."
+  caption="Output methods compared, part one — printer and display screen."
+  source="Lecture 10, slide 9"
+  scroll
+/>
+
+<Figure
+  src="lec10/output-methods-2.png"
+  alt="A comparison table of output methods, part two. Audio output and podcasts: good for individual users, transient and hands-free messages, wide distribution — but needs earbuds to avoid interfering with other tasks, and has limited application. Mobile devices: highly portable, interactive via gestures, zoomable — but the screen may be too small, icons confusing, and it is easily misplaced. Electronic output (email, blogs, RSS): reduces paper, updated and broadcast easily, interactive — but not good for formatting, poor at conveying message context, and needs diligent maintenance."
+  caption="Output methods compared, part two — audio, mobile, and electronic output."
+  source="Lecture 10, slide 10"
+  scroll
+/>
+
+The factors that decide it: who uses the output, how many people need it, where
+it is needed, its purpose, the speed required, how often it is accessed, how long
+it must be stored and under what regulations, the cost, and the environmental
+impact. **Green IT** considerations increasingly push toward on-screen rather than
+printed output.
+
+## Output bias
+
+The way output is presented can steer a decision without the reader realising —
+and the analyst has to actively guard against it.
+
+<Figure
+  src="lec10/misleading-graph.png"
+  alt="A bar chart of number of no-shows for 2011 and 2012 with a vertical axis running only from 400 to 450, so a change from about 420 to 450 looks like a threefold increase. A sticky note reads 'This diagram doesn't give the true picture.'"
+  caption="A truncated axis turns a 7 percent rise into a visual tripling. Same data, different conclusion."
+  source="Lecture 10, slide 15"
+/>
+
+Bias creeps in through the choice of what to aggregate and what to show
+separately, the order rows are sorted in, the scale and baseline of a graph, and
+which comparisons are put next to each other. Countermeasures: know the sources
+of bias, involve users in designing the output, test the output with the people
+who will act on it, and — when a presentation choice is unavoidably slanted — make
+the reader aware of it.
+
+## Designing reports and screens
+
+**Printed reports** come in kinds: **detailed** (one line per record),
+**exception** (only records that fall outside a normal range), **summary** (totals
+and subtotals for managers), and **historical**. Each needs headings, page
+numbers, dates, and clear column labels so a page makes sense on its own.
+
+**Screen output** follows a few rules: keep the display simple, keep the layout
+consistent from screen to screen, make it easy for the user to move between
+screens, and keep a screen focused on one task.
+
+For **graphical output**, decide deliberately: the purpose of the graph, the kind
+of data, the audience, and the effect you want — then pick a chart type that
+serves that rather than one that looks impressive.
+
+## Dashboards
+
+A **dashboard** puts the numbers a person needs to monitor on one screen. Good
+ones:
+
+- Give every number **context** — compared to a target, a prior period, a
+  threshold.
+- Show the **right level of summarisation and precision** — not six decimal
+  places where two will do.
+- Use the **correct chart type** and well-designed display media.
+- **Highlight** what matters and **group** related data.
+- Stay **uncluttered** and fit on a single screen without scrolling.
+
+## Web and app output
+
+Designing a website's output involves planning **structure** (every page reachable
+in about three clicks), **content** (kept current, often via a content management
+system), **text** (a title per page, meaningful words first), **graphics** (JPEG,
+GIF, or PNG; simple backgrounds; kept few), **presentation style** (a home page,
+consistent layout, cascading styles), and **navigation** (a nav bar and a
+home link on every page).
+
+Before building, the design is worked out in low-fidelity form — a **storyboard**
+showing how screens differ from one another, then a **wireframe** or **mockup**
+showing what appears at each position on a page without committing to final
+visuals.
+
+Designing output for **smartphones and tablets** adds constraints: design the
+output again for a second orientation, design the icon, follow platform rules,
+and expect to develop by prototyping with quick releases.
+
+## Producing output from one source
+
+<Figure
+  src="lec10/xslt-transform.png"
+  alt="A diagram: an XML document feeds a desktop computer, which transforms it into a web page, a paper document, a smartphone display, and a new XML document — one source producing many output formats."
+  caption="One XML document, transformed by XSLT into several output media at once."
+  source="Lecture 10, slide 55"
+  scroll
+/>
+
+Keeping content in a structured source such as **XML** lets one document be
+transformed into many output formats. **XSLT** (Extensible Stylesheet Language
+Transformations) selects, sorts, and reformats XML elements into HTML, print,
+mobile, or another XML shape. **Ajax** uses JavaScript and XML to fetch small
+pieces of data from a server and update part of a page without reloading it.
+
+## Where this idea shows up now
+
+The templating engine, the design system, and the component library are today's
+answer to "produce many outputs from one source". Dashboard design guidance is
+unchanged — context, the right chart, highlight and group, one screen. And output
+bias is now a data-visualisation ethics issue with the same fixes: honest axes,
+honest comparisons, and telling the reader when a choice of presentation cuts one
+way.

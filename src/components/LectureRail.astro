@@ -1,0 +1,40 @@
+---
+interface Item {
+  number: number;
+  title: string;
+  href: string;
+  current: boolean;
+}
+interface Props {
+  items: Item[];
+}
+const { items } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<details class="rail rail--mobile">
+  <summary>All lectures</summary>
+  <ol>
+    {items.map((it) => (
+      <li>
+        <a href={it.href} aria-current={it.current ? 'page' : undefined}>
+          <span class="num">{pad(it.number)}</span>
+          <span>{it.title}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</details>
+
+<nav class="rail rail--side" aria-label="All lectures">
+  <p class="rail__title">Lectures</p>
+  <ol>
+    {items.map((it) => (
+      <li>
+        <a href={it.href} aria-current={it.current ? 'page' : undefined}>
+          <span class="num">{pad(it.number)}</span>
+          <span>{it.title}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</nav>
