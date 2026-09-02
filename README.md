@@ -71,7 +71,9 @@ Node 22 and publishes `dist/` to GitHub Pages. `astro.config.mjs` sets
 
 ## Credits
 
-Compiled and rewritten by Syed Mehedi Hussain, from the System Analysis and
-Design course at the Department of Computer Science and Engineering, Independent
-University, Bangladesh (Dr. Razib Hayat Khan). The lecture slides are the source
-of every diagram and of the course's structure; the explanatory text is new.
+Compiled and rewritten by [Syed Mehedi Hussain](https://syedmehedihussain.codes),
+from the System Analysis and Design course at the Department of Computer Science
+and Engineering, Independent University, Bangladesh
+([Dr. Razib Hayat Khan](https://iub.ac.bd/academics/departments/cse/faculty-and-staff/rkhan)).
+The lecture slides are the source of every diagram and of the course's structure;
+the explanatory text is new.
